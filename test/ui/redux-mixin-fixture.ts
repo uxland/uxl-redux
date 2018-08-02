@@ -9,7 +9,7 @@ const mockStore = configureStore(middlewares)();
 import * as sinon from "sinon";
 import { customElement, item, property } from "@uxland/uxl-polymer2-ts";
 
-const fixtureElementName = "utilities-fixture";
+const fixtureElementName = "redux-mixin-fixture";
 const defaultComponentName = "custom-element";
 const getComponentName = (nameBase: string) => {
     let counter = 0;
