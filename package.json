@@ -1,15 +1,18 @@
 {
     "name": "uxl-redux",
     "version": "0.0.0-development",
-    "description": "UXLand Redux Element",
-    "homepage": "https://bitbucket.org/newuibcn/uxl-redux",
-    "author": {
-        "name": "UXLand",
-        "email": "dev@uxland.es",
-        "url": "http://www.uxland.es"
+    "description": "UXLand - Redux Element",
+    "homepage": "https://github.com/uxland/uxl-redux#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/uxland/uxl-redux.git"
     },
-    "main": "index.js",
-    "module": "dist/esm/index.js",
+    "bugs": {
+        "url": "https://github.com/uxland/uxl-redux/issues"
+    },
+    "author": "UXLand <dev@uxland.es> (http://www.uxland.es)",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
     "keywords": [
         "polymer",
         "web components"
@@ -45,7 +48,7 @@
         "wct-browser-legacy": "^1.0.0"
     },
     "dependencies": {
-        "@uxland/uxl-polymer2-ts": "^1.0.4",
+        "@uxland/uxl-redux": "^1.0.4",
         "@uxland/uxl-utilities": "^1.1.4",
         "date-fns": "^2.0.0-alpha.10",
         "dot-prop-immutable": "git+https://github.com/dpinart/dot-prop-immutable.git",
@@ -69,6 +72,5 @@
         "esm": "js",
         "cjs": true
     },
-    "repository": "https://bitbucket.org/newuibcn/uxl-redux",
     "license": "Apache-2.0"
 }
