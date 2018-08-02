@@ -1,0 +1,7 @@
+src/
+test/
+mochawesome-report/
+polymer.json
+tsconfig.json
+gulp/
+gulpfile.js

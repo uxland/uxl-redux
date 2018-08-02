@@ -1,0 +1,69 @@
+{
+    "name": "uxl-redux",
+    "version": "1.0.30",
+    "description": "UXLand Redux Element",
+    "homepage": "https://bitbucket.org/newuibcn/uxl-redux",
+    "author": {
+        "name": "UXLand",
+        "email": "dev@uxland.es",
+        "url": "http://www.uxland.es"
+    },
+    "main": "index.js",
+    "module": "dist/esm/index.js",
+    "keywords": [
+        "polymer",
+        "web components"
+    ],
+    "devDependencies": {
+        "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
+        "@types/chai": "^4.1.4",
+        "@types/lodash-es": "^4.17.0",
+        "@types/mocha": "^5.2.2",
+        "@types/polymer": "^1.2.4",
+        "@types/redux-mock-store": "^1.0.0",
+        "@types/sinon": "^5.0.1",
+        "@webcomponents/webcomponentsjs": "^2.0.0",
+        "chai": "^4.1.2",
+        "dts-generator": "^2.1.0",
+        "esm": "^3.0.66",
+        "gulp": "^3.9.1",
+        "gulp-run": "^1.7.1",
+        "lodash": "3.10.1",
+        "mocha": "^5.2.0",
+        "mochawesome": "^3.0.2",
+        "nsp": "^2.6.3",
+        "path": "^0.12.7",
+        "redux-mock-store": "https://github.com/dpinart/redux-mock-store.git",
+        "require-dir": "^0.3.2",
+        "rimraf": "^2.6.2",
+        "sinon": "^6.0.0",
+        "typescript": "^2.9.2",
+        "wct-browser-legacy": "^1.0.0"
+    },
+    "dependencies": {
+        "@uxland/uxl-polymer2-ts": "^1.0.2",
+        "@uxland/uxl-utilities": "^1.1.3",
+        "date-fns": "^2.0.0-alpha.10",
+        "dot-prop-immutable": "git+https://github.com/dpinart/dot-prop-immutable.git",
+        "lodash-es": "^4.17.10",
+        "ncp": "^2.0.0",
+        "reduce-reducers": "^0.3.0",
+        "redux": "^4.0.0",
+        "redux-thunk": "^2.3.0"
+    },
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "test:ui:watch": "nodemon --watch test --watch src -x \"polymer test --config-file wct.config.json\"",
+        "test:ui": "polymer test --config-file wct.config.json",
+        "test:unit": "echo 'No unit testing defined'",
+        "tdd": "node --experimental-modules node_modules/mocha/bin/_mocha --watch -r esm --ui tdd --reporter mochawesome test",
+        "dist": "tsc --p gulp/tsconfig-dist.json && gulp generate-d-ts",
+        "prepublishOnly": "if [ -d dist ]; then ncp dist/. . && rimraf dist/; fi"
+    },
+    "@std/esm": {
+        "esm": "js",
+        "cjs": true
+    },
+    "repository": "https://bitbucket.org/newuibcn/uxl-redux",
+    "license": "Apache-2.0"
+}
