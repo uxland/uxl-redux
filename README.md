@@ -9,4 +9,4 @@
 
 ## Usage
 
-`import {} from '@uxland/uxl-redux'`
+`import {createAction, createActionThunk, createBasicReducer, createAsyncReducer, ReduxMixin} from '@uxland/uxl-redux'`
