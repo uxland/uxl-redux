@@ -1,6 +1,6 @@
 const gulp = require("gulp");
 const run = require("gulp-run");
-const moduleName = "uxl-redux";
+const moduleName = "@uxland/uxl-redux";
 const path = require("path");
 const nodeModules = "node_modules";
 
