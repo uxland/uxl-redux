@@ -72,5 +72,11 @@
         "esm": "js",
         "cjs": true
     },
-    "license": "Apache-2.0"
+    "license": "Apache-2.0",
+    "directories": {
+        "test": "test"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
 }
