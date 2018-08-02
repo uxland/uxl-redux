@@ -1,21 +1,12 @@
-# \<uxl-redux\>
+# \<uxl-polymer2-ts\>
 
+[![Build Status](https://travis-ci.org/uxland/uxl-polymer2-ts.svg?branch=master)](https://travis-ci.org/uxland/uxl-polymer2-ts)
+[![npm version](https://badge.fury.io/js/%40uxland%2Fuxl-polymer2-ts.svg)](https://badge.fury.io/js/%40uxland%2Fuxl-polymer2-ts)
 
+## Installation
 
-## Install the Polymer-CLI
+`npm i @uxland/uxl-polymer2-ts`
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+## Usage
 
-## Viewing Your Element
-
-```
-$ polymer serve
-```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+`import {customElement, property, computed, observe} from 'uxl-polymer2-ts'`
