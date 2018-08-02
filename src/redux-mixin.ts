@@ -56,7 +56,7 @@ export function reduxMixin(store: Store<any, any>) {
         }
     };
     return dedupingMixin(parent => {
-        class ReduxMixinKlass extends parent {
+        return class extends parent {
             connectedCallback() {
                 const properties = collect(this.constructor, "properties");
                 bind(this, properties);
@@ -66,7 +66,6 @@ export function reduxMixin(store: Store<any, any>) {
                 unbind(this);
                 super.disconnectedCallback();
             }
-        }
-        return ReduxMixinKlass;
+        };
     });
 }

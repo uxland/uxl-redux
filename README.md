@@ -9,4 +9,4 @@
 
 ## Usage
 
-`import {customElement, property, computed, observe} from '@uxland/uxl-redux'`
+`import {} from '@uxland/uxl-redux'`
