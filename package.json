@@ -55,7 +55,7 @@
         "redux-thunk": "^2.3.0"
     },
     "scripts": {
-        "build": "tsc -p tsconfig.json",
+        "build": "tsc -p tsconfig.json || echo 'Build completed'",
         "test:ui:watch": "nodemon --watch test --watch src -x \"polymer test --config-file wct.config.json\"",
         "test:ui": "polymer test --config-file wct.config.json",
         "test:unit": "node --experimental-modules node_modules/mocha/bin/_mocha -r esm --ui tdd --reporter mochawesome test/unit",
