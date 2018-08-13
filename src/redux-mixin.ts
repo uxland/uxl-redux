@@ -1,6 +1,6 @@
 import { dedupingMixin } from "@polymer/polymer/lib/utils/mixin";
 import {LitElement} from '@polymer/lit-element/lit-element';
-import * as path from "@polymer/polymer/lib/utils/path";
+import {get} from 'dot-prop-immutable';
 
 import { PropertyOptions } from "@uxland/uxl-polymer2-ts";
 import { Store } from "redux";
@@ -10,27 +10,6 @@ export interface IReduxMixin<T = any> extends LitElement {
     new (): IReduxMixin<T> & T;
 }
 export type ReduxMixin = <T = any>(parent: any) => IReduxMixin<T>;
-
-export const observersMixin = dedupingMixin(parent =>{
-    class mixin extends LitElement{
-        _shouldPropertiesChange(props: mixin, changedProps: any, prevProps: any){
-            let p = collect(this.constructor, 'properties');
-            let observedProperties = Object.keys(p).filter(key => p[key].observer && changedProps.hasOwnProperty(key));
-            observedProperties.forEach(name =>{
-                let prop = p[name];
-                let observer = prop.observer;
-                this[observer].call(this, changedProps[name], prevProps[name]);
-            })
-            /*Object.keys(p).forEach(name =>{
-                let property = p[name];
-               let observer = property['observer'];
-               let computed = property['computed'];
-            });*/
-            return true;
-        }
-    }
-    return mixin;
-})
 
 export function reduxMixin<T = any>(store: Store<any, any>) {
     const subscribers = new Map();
@@ -50,8 +29,8 @@ export function reduxMixin<T = any>(store: Store<any, any>) {
         const update = state => {
             let propertiesChanged = bindings.reduce((previousValue, name) => {
                 const { statePath } = properties[name];
-                const value = typeof statePath === "function" ? statePath.call(element, state) : path.get(state, statePath);
-                return previousValue || element._setPendingProperty(name, value, true);
+                const value = typeof statePath === "function" ? statePath.call(element, state) : get(state, statePath);
+                return element._setPendingProperty(name, value, true) || previousValue;
             }, false);
             if (propertiesChanged)
                 element._invalidateProperties();
@@ -74,7 +53,7 @@ export function reduxMixin<T = any>(store: Store<any, any>) {
         }
     };
     return dedupingMixin(parent => {
-        class mixin extends observersMixin(parent) {
+        class mixin extends parent {
             connectedCallback() {
                 const properties = collect(this.constructor, "properties");
                 bind(this, properties);

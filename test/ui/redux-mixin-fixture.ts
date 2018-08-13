@@ -20,8 +20,6 @@ const getDefaultComponentName = getComponentName(defaultComponentName);
 interface DefaultTestComponent {
     myProperty: string;
     header: HTMLHeadElement;
-
-    onMyPropertyChanged(current: string, old: string);
 }
 
 const propertySelector = sinon.spy(state => "Hello from redux state");
@@ -39,11 +37,9 @@ const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponen
         _render(props: Component){
             return html `<h1 id="header">${props.myProperty}</h1>`
         }
-        @property({ statePath: selector, observer: "onMyPropertyChanged" })
+        @property({ statePath: selector})
         myProperty: string;
         @item("header") header: HTMLHeadElement;
-
-        onMyPropertyChanged(current: string, old: string) {}
     }
     return addComponentToFixture(componentName);
 };
@@ -70,12 +66,6 @@ suite("redux mixin fixture", () => {
         mockStore.dispatch({ type: "@@NOP" });
         assert.isTrue(propertySelector.calledOnce);
     });
-    test("property should not change if selector does not change", () => {
-        let component = createDefaultComponent();
-        const spy = sinon.spy(component, "onMyPropertyChanged");
-        mockStore.dispatch({ type: "@@NOP" });
-        assert.isFalse(spy.called);
-    });
     test("property should change if selector changes", async() => {
         const message1 = "Hello from redux state";
         const message2 = "Hello again from redux state";
@@ -87,13 +77,11 @@ suite("redux mixin fixture", () => {
             .returns(message2);
 
         const component = createDefaultComponent(selector);
-        const spy = sinon.spy(component, "onMyPropertyChanged");
         await component.renderComplete;
         assert.equal(component.myProperty, message1);
         mockStore.dispatch({ type: "@@NOP" });
         await component.renderComplete;
         assert.isTrue(selector.calledTwice);
-        assert.isTrue(spy.calledWith(message2, message1));
         assert.equal(component.myProperty, message2);
     });
     test("mixin test", async() => {
@@ -107,9 +95,8 @@ suite("redux mixin fixture", () => {
             .returns(message2);
         const mixin = parent => {
             class Mixin extends reduxMixin(mockStore)(parent) {
-                @property({ statePath: mixinSelector, observer: "mixinPropertyChanged" })
+                @property({ statePath: mixinSelector})
                 mixinProperty: string;
-                mixinPropertyChanged(current: string, previous: string) {}
             }
             return Mixin;
         };
@@ -137,17 +124,14 @@ suite("redux mixin fixture", () => {
             componentPropertyChanged(current: string, old: string) {}
         }
         const component = <Component>addComponentToFixture("mixed-component");
-        await component.renderComplet;
-        const mixinSpy = sinon.spy(component, "mixinPropertyChanged");
-        const componentSpy = sinon.spy(component, "componentPropertyChanged");
+        await component.renderComplete;
         assert.equal(component.mixinProperty, message1);
         assert.equal(component.componentProperty, message3);
         assert.equal(component.header1.innerText, message3);
         assert.equal(component.header2.innerText, message1);
         mockStore.dispatch({ type: "@@NOP" });
+        await component.renderComplete;
         assert.isTrue(selector.calledTwice);
-        assert.isTrue(mixinSpy.calledWith(message2, message1));
-        assert.isTrue(componentSpy.calledWith(message4, message3));
         assert.equal(component.mixinProperty, message2);
         assert.equal(component.componentProperty, message4);
         assert.equal(component.header1.innerText, message4);
