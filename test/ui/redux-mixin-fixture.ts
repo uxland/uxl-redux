@@ -1,5 +1,5 @@
 import { reduxMixin } from "../../src/redux-mixin";
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
+import { html, LitElement } from "@polymer/lit-element/lit-element";
 
 import configureStore from "redux-mock-store";
 
@@ -17,7 +17,7 @@ const getComponentName = (nameBase: string) => {
 };
 const getDefaultComponentName = getComponentName(defaultComponentName);
 
-interface DefaultTestComponent extends PolymerElement {
+interface DefaultTestComponent {
     myProperty: string;
     header: HTMLHeadElement;
 
@@ -31,13 +31,13 @@ const addComponentToFixture = <T>(componentName: string) => {
     container.appendChild(<any>component);
     return component;
 };
-const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponent = (selector = propertySelector) => {
+const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponent & LitElement = (selector = propertySelector) => {
     const componentName = getDefaultComponentName();
 
     @customElement(componentName)
-    class Component extends reduxMixin(mockStore)(PolymerElement) implements DefaultTestComponent {
-        static get template() {
-            return html`<h1 id="header">[[myProperty]]</h1>`;
+    class Component extends reduxMixin(mockStore)(LitElement) implements DefaultTestComponent {
+        _render(props: Component){
+            return html `<h1 id="header">${props.myProperty}</h1>`
         }
         @property({ statePath: selector, observer: "onMyPropertyChanged" })
         myProperty: string;
@@ -76,7 +76,7 @@ suite("redux mixin fixture", () => {
         mockStore.dispatch({ type: "@@NOP" });
         assert.isFalse(spy.called);
     });
-    test("property should change if selector changes", () => {
+    test("property should change if selector changes", async() => {
         const message1 = "Hello from redux state";
         const message2 = "Hello again from redux state";
         const selector = sinon
@@ -88,13 +88,15 @@ suite("redux mixin fixture", () => {
 
         const component = createDefaultComponent(selector);
         const spy = sinon.spy(component, "onMyPropertyChanged");
+        await component.renderComplete;
         assert.equal(component.myProperty, message1);
         mockStore.dispatch({ type: "@@NOP" });
+        await component.renderComplete;
         assert.isTrue(selector.calledTwice);
         assert.isTrue(spy.calledWith(message2, message1));
         assert.equal(component.myProperty, message2);
     });
-    test("mixin test", () => {
+    test("mixin test", async() => {
         const message1 = "Hello from mixin";
         const message2 = "Hello again from mixin";
         const mixinSelector = sinon
@@ -120,9 +122,10 @@ suite("redux mixin fixture", () => {
             .onSecondCall()
             .returns(message4);
         @customElement("mixed-component")
-        class Component extends mixin(PolymerElement) {
-            static get template() {
-                return html`<h1 id="header1">[[componentProperty]]</h1><h1 id="header2">[[mixinProperty]]</h1>`;
+        class Component extends mixin(LitElement) {
+
+            _render(props: Component){
+                return html`<h1 id="header1">${props.componentProperty}</h1><h1 id="header2">${props.mixinProperty}</h1>`;
             }
             @property({ statePath: selector, observer: "componentPropertyChanged" })
             componentProperty: string;
@@ -134,6 +137,7 @@ suite("redux mixin fixture", () => {
             componentPropertyChanged(current: string, old: string) {}
         }
         const component = <Component>addComponentToFixture("mixed-component");
+        await component.renderComplet;
         const mixinSpy = sinon.spy(component, "mixinPropertyChanged");
         const componentSpy = sinon.spy(component, "componentPropertyChanged");
         assert.equal(component.mixinProperty, message1);
