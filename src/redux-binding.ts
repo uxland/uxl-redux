@@ -29,7 +29,8 @@ export const bind = (element: any, properties: { [name: string]: PropertyOptions
     const unsubscribe = store.subscribe(() => {
         const detail = store.getState();
         update(detail);
-        element.dispatchEvent(new CustomEvent("state-changed", { detail }));
+        if(element.dispatchEvent)
+            element.dispatchEvent(new CustomEvent("state-changed", { detail }));
     });
     subscribers.set(element, unsubscribe);
     update(store.getState());
