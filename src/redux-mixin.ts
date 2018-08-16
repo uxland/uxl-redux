@@ -1,10 +1,8 @@
 import { dedupingMixin } from "@polymer/polymer/lib/utils/mixin";
 import {LitElement} from '@polymer/lit-element/lit-element';
-import {get} from 'dot-prop-immutable';
-
-import { PropertyOptions } from "@uxland/uxl-polymer2-ts";
+import {collect} from '@uxland/uxl-utilities/collect';
 import { Store } from "redux";
-const collect = (what: any, wich: string) => (what ? { ...what[wich], ...collect(Object.getPrototypeOf(what), wich) } : {});
+import {bind, unbind} from "./redux-binding";
 
 export interface IReduxMixin<T = any> extends LitElement {
     new (): IReduxMixin<T> & T;
@@ -12,51 +10,11 @@ export interface IReduxMixin<T = any> extends LitElement {
 export type ReduxMixin = <T = any>(parent: any) => IReduxMixin<T>;
 
 export function reduxMixin<T = any>(store: Store<any, any>) {
-    const subscribers = new Map();
-    const bind = (element: any, properties: { [name: string]: PropertyOptions }) => {
-        const bindings = Object.keys(properties).filter(name => {
-            const property = properties[name];
-            if (Object.prototype.hasOwnProperty.call(property, "statePath")) {
-                if (!property.readOnly && property.notify) {
-                    console.warn(
-                        `PolymerRedux: <${element.constructor.is}>.${name} has "notify" enabled, two-way bindings goes against Redux's paradigm`
-                    );
-                }
-                return true;
-            }
-            return false;
-        });
-        const update = state => {
-            let propertiesChanged = bindings.reduce((previousValue, name) => {
-                const { statePath } = properties[name];
-                const value = typeof statePath === "function" ? statePath.call(element, state) : get(state, statePath);
-                return element._setPendingProperty(name, value, true) || previousValue;
-            }, false);
-            if (propertiesChanged)
-                element._invalidateProperties();
-
-        };
-        const unsubscribe = store.subscribe(() => {
-            const detail = store.getState();
-            update(detail);
-            element.dispatchEvent(new CustomEvent("state-changed", { detail }));
-        });
-        subscribers.set(element, unsubscribe);
-        update(store.getState());
-
-        return update;
-    };
-    const unbind = element => {
-        const off = subscribers.get(element);
-        if (typeof off === "function") {
-            off();
-        }
-    };
     return dedupingMixin(parent => {
         class mixin extends parent {
             connectedCallback() {
                 const properties = collect(this.constructor, "properties");
-                bind(this, properties);
+                bind(this, properties, store);
                 super.connectedCallback();
             }
             disconnectedCallback() {
