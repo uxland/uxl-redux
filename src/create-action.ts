@@ -11,6 +11,7 @@ export interface Action<Payload = any, Meta = any> extends ReduxAction{
     meta?: Meta;
     error?: boolean;
     timestamp?: Date;
+    elapsed?: number;
 }
 const invariant = (condition: boolean, message: string) =>{
     if(!condition)
