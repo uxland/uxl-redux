@@ -17,17 +17,19 @@ export const bind = (element: any, properties: { [name: string]: PropertyOptions
         return false;
     });
     const update = state => {
-        let propertiesChanged = bindings.reduce((previousValue, name) => {
+        let propertiesChanged = bindings.reduce((current, name) => {
             const { statePath } = properties[name];
             const value = typeof statePath === "function" ? statePath.call(element, state) : get(state, statePath);
-            if (element[name] != value){
-                previousValue = true;
+            const previousValue = element[name];
+            if (previousValue != value){
+                current.push({name, old: previousValue});
                 element[name] = value;
             }
-            return previousValue;
-        }, false);
-        if (propertiesChanged)
-            element.requestUpdate();
+            return current;
+        }, []);
+        if (propertiesChanged.length && element.requestUpdate)
+            element.requestUpdate(propertiesChanged);
+
 
     };
     const unsubscribe = store.subscribe(() => {
