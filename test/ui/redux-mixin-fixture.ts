@@ -34,8 +34,8 @@ const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponen
 
     @customElement(componentName)
     class Component extends reduxMixin(mockStore)(LitElement) implements DefaultTestComponent {
-        _render(props: Component){
-            return html `<h1 id="header">${props.myProperty}</h1>`
+        render(){
+            return html `<h1 id="header">${this.myProperty}</h1>`
         }
         @property({ statePath: selector})
         myProperty: string;
@@ -43,15 +43,15 @@ const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponen
     }
     return addComponentToFixture(componentName);
 };
-
 suite("redux mixin fixture", () => {
     // noinspection TypeScriptUnresolvedFunction
     setup(() => {
         propertySelector.resetHistory();
     });
-    test("bind test", () => {
+    test("bind test", async() => {
         let component = createDefaultComponent();
         assert.isTrue(propertySelector.calledOnce);
+        await component.updateComplete;
         assert.equal(component.header.innerText, "Hello from redux state");
     });
     test("update test", () => {
@@ -77,10 +77,10 @@ suite("redux mixin fixture", () => {
             .returns(message2);
 
         const component = createDefaultComponent(selector);
-        await component.renderComplete;
+        await component.updateComplete;
         assert.equal(component.myProperty, message1);
         mockStore.dispatch({ type: "@@NOP" });
-        await component.renderComplete;
+        await component.updateComplete;
         assert.isTrue(selector.calledTwice);
         assert.equal(component.myProperty, message2);
     });
@@ -111,8 +111,8 @@ suite("redux mixin fixture", () => {
         @customElement("mixed-component")
         class Component extends mixin(LitElement) {
 
-            _render(props: Component){
-                return html`<h1 id="header1">${props.componentProperty}</h1><h1 id="header2">${props.mixinProperty}</h1>`;
+            render(){
+                return html`<h1 id="header1">${this.componentProperty}</h1><h1 id="header2">${this.mixinProperty}</h1>`;
             }
             @property({ statePath: selector, observer: "componentPropertyChanged" })
             componentProperty: string;
@@ -124,13 +124,13 @@ suite("redux mixin fixture", () => {
             componentPropertyChanged(current: string, old: string) {}
         }
         const component = <Component>addComponentToFixture("mixed-component");
-        await component.renderComplete;
+        await component.updateComplete;
         assert.equal(component.mixinProperty, message1);
         assert.equal(component.componentProperty, message3);
         assert.equal(component.header1.innerText, message3);
         assert.equal(component.header2.innerText, message1);
         mockStore.dispatch({ type: "@@NOP" });
-        await component.renderComplete;
+        await component.updateComplete;
         assert.isTrue(selector.calledTwice);
         assert.equal(component.mixinProperty, message2);
         assert.equal(component.componentProperty, message4);

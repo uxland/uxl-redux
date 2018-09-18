@@ -20,10 +20,14 @@ export const bind = (element: any, properties: { [name: string]: PropertyOptions
         let propertiesChanged = bindings.reduce((previousValue, name) => {
             const { statePath } = properties[name];
             const value = typeof statePath === "function" ? statePath.call(element, state) : get(state, statePath);
-            return element._setPendingProperty(name, value, true) || previousValue;
+            if (element[name] != value){
+                previousValue = true;
+                element[name] = value;
+            }
+            return previousValue;
         }, false);
         if (propertiesChanged)
-            element._invalidateProperties();
+            element.requestUpdate();
 
     };
     const unsubscribe = store.subscribe(() => {

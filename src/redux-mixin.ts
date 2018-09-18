@@ -19,9 +19,10 @@ export function reduxMixin<T = any>(store: Store<any, any>) {
             }
             disconnectedCallback() {
                 unbind(this);
-                super.disconnectedCallback();
+                if(super.disconnectedCallback)
+                    super.disconnectedCallback();
             }
         };
-        return mixin as IReduxMixin<T>
+        return (<any>mixin) as IReduxMixin<T>;
     });
 }

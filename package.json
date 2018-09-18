@@ -43,11 +43,11 @@
         "semantic-release": "^15.9.3",
         "sinon": "^6.0.0",
         "travis-deploy-once": "^5.0.1",
-        "typescript": "^2.9.2",
+        "typescript": "^3.0.3",
         "wct-browser-legacy": "^1.0.0"
     },
     "dependencies": {
-        "@polymer/lit-element": "^0.5.2",
+        "@polymer/lit-element": "^0.6.1",
         "@uxland/uxl-polymer2-ts": "^1.0.6",
         "@uxland/uxl-utilities": "^1.1.4",
         "date-fns": "^2.0.0-alpha.10",
