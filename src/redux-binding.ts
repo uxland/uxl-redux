@@ -1,6 +1,8 @@
 import {PropertyOptions} from "@uxland/uxl-polymer2-ts";
 import {Store} from "redux";
 import {get} from 'dot-prop-immutable';
+import {notEqual} from "@polymer/lit-element";
+
 const subscribers = new WeakMap();
 
 export const bind = (element: any, properties: { [name: string]: PropertyOptions }, store: Store<any, any>) =>{
@@ -21,7 +23,7 @@ export const bind = (element: any, properties: { [name: string]: PropertyOptions
             const { statePath } = properties[name];
             const value = typeof statePath === "function" ? statePath.call(element, state) : get(state, statePath);
             const previousValue = element[name];
-            if (previousValue != value){
+            if (notEqual(previousValue, value)){
                 current.push({name, old: previousValue});
                 element[name] = value;
             }
