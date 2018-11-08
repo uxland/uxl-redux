@@ -7,7 +7,7 @@ export async function performAsyncAction<T = any>(actionName: string, fn: () => 
     try {
         store.dispatch({type: actions.started, meta: meta});
         let payload = await fn();
-        store.dispatch({type: actions.succeeded, payload, meta});
+        store.dispatch({type: actions.succeeded, payload, meta, timestamp: new Date()});
         return payload;
     }
     catch (e) {
