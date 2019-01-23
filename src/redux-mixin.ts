@@ -1,5 +1,5 @@
 import { dedupingMixin } from "@polymer/polymer/lib/utils/mixin";
-import {LitElement} from '@polymer/lit-element/lit-element';
+import {LitElement} from 'lit-element/lit-element';
 import {collect} from '@uxland/uxl-utilities/collect';
 import { Store } from "redux";
 import {bind, unbind} from "./redux-binding";

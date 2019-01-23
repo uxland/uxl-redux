@@ -47,7 +47,7 @@
         "wct-browser-legacy": "^1.0.0"
     },
     "dependencies": {
-        "@polymer/lit-element": "^0.6.1",
+        "lit-element": "^2.0.0-rc.3",
         "@uxland/uxl-polymer2-ts": "^1.0.6",
         "@uxland/uxl-utilities": "^1.1.4",
         "date-fns": "^2.0.0-alpha.10",

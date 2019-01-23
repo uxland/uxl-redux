@@ -1,7 +1,7 @@
 import {PropertyOptions} from "@uxland/uxl-polymer2-ts";
 import {Store} from "redux";
 import {get} from 'dot-prop-immutable';
-import {notEqual} from "@polymer/lit-element";
+import {notEqual} from "lit-element";
 
 const subscribers = new WeakMap();
 
