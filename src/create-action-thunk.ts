@@ -1,14 +1,18 @@
 import {createAction} from "./create-action";
-import drop from 'lodash-es/drop';
-import isUndefined from 'lodash-es/isUndefined';
+import is from 'ramda/es/is';
+import ifElse from 'ramda/es/ifElse';
+import always from 'ramda/es/always';
+import drop from 'ramda/es/drop';
 
+type MetaCreator = (...args: any) => any;
+const createMeta = (mc: MetaCreator) => (...args: any) => mc(...drop(1, args));
 const createActionThunk = (type: string, fn: Function, metaCreator?: (...args: any[]) => any) =>{
     const TYPE_START     = `${type}_STARTED`;
     const TYPE_SUCCEEDED = `${type}_SUCCEEDED`;
     const TYPE_FAILED    = `${type}_FAILED`;
     const TYPE_ENDED     = `${type}_ENDED`;
 
-    const finalMetaCreator = mc => isUndefined(mc) ? undefined : (...args: any[]) => mc(...drop(args));
+    const finalMetaCreator: (mc) => MetaCreator = ifElse(is(Function), createMeta, always(undefined));
     const actionCreators = {
         [TYPE_START]     : createAction(TYPE_START, () => undefined, metaCreator),
         [TYPE_SUCCEEDED] : createAction(TYPE_SUCCEEDED, undefined, finalMetaCreator(metaCreator)),
@@ -35,7 +39,7 @@ const createActionThunk = (type: string, fn: Function, metaCreator?: (...args: a
                 elapsed: endedAt - startedAt
             }, ...args));
             throw err;
-        }
+        };
         try {
             result = fn(...args, {getState, dispatch, extra});
         } catch (error) {

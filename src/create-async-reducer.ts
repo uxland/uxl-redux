@@ -1,14 +1,16 @@
 import {Action} from "./create-action";
 import {BasicOptions} from './create-basic-reducer';
-import isUndefined from "lodash-es/isUndefined";
-import isArray from "lodash-es/isArray";
-import {PathResolver, default as resolvePath} from "./path-resolver";
-import {get, set} from 'dot-prop-immutable';
+import {Lens} from 'ramda';
+import is from 'ramda/es/is';
+import view from 'ramda/es/view';
+import isNil from 'ramda/es/isNil';
+import set from 'ramda/es/set';
+import {PathResolver, resolvePath} from "./path-resolver";
 
 export interface Options<T = any> extends BasicOptions<T>{
     timestampAccessor?: (action: Action) => Date;
     payloadAccessor?: (action: Action) => T;
-    pathResolver?: string | PathResolver;
+    pathResolver?: Lens | PathResolver;
 }
 
 export interface AsyncState<TState = any>{
@@ -35,8 +37,8 @@ const actionsCreator = (base: string) => {
 
 const setPropertyOnlyIfDefined = (state: any, prop: string, value: any) => value ? {...state, [prop]: value} : state;
 
-const extractExceptions = (action: Action) => action.payload ? isArray(action.payload) ? action.payload : [action.payload] : null;
-const extractErrorDescription = (action: Action) => action.payload ? !isUndefined(action.payload.message) ? action.payload.message : String(action.payload) : '';
+const extractExceptions = (action: Action) => action.payload ? is(Array, action.payload) ? action.payload : [action.payload] : null;
+const extractErrorDescription = (action: Action) => action.payload ? !isNil(action.payload.message) ? action.payload.message : String(action.payload) : '';
 
 const setErrorDescription = (state: AsyncState, action: Action): AsyncState => setPropertyOnlyIfDefined(state, 'errorDescription', extractErrorDescription(action));
 const setErrorExceptions = (state: AsyncState, action: Action): AsyncState => setPropertyOnlyIfDefined(state, 'exceptions', extractExceptions(action));
@@ -57,20 +59,20 @@ const setElapsed = (state, action) => setPropertyOnlyIfDefined(state, 'elapsed',
 
 const setter = (options: Options, setter) => {
     const getState = (state: AsyncState, action: Action) =>
-        options.pathResolver ? get(state, resolvePath(options.pathResolver, action)) : state;
-    const setState = (state, newState, action) => options.pathResolver ? set(state, resolvePath(options.pathResolver, action), newState) : newState;
+        options.pathResolver ? view(resolvePath(options.pathResolver, action), state) : state;
+    const setState = (state, newState, action) => options.pathResolver ? set(resolvePath(options.pathResolver, action), newState, state) : newState;
     return (state, action) => {
         const currentState  = getState(state, action);
         const newState = setter(currentState, action);
         return newState !== currentState ? setState(state, newState, action) : state;
     }
-}
+};
 const initialValueSetter = (setter, initialValue) => (state, action) => setter(initialValue, action);
 
 const nop = state => state;
 
 export const createAsyncReducer = <T>(actionName: string, options: Options<T> = {}) => {
-    const initialValue = isUndefined(options.defValue) ? {...defaultState} : {...defaultState, state: options.defValue};
+    const initialValue = isNil(options.defValue) ? {...defaultState} : {...defaultState, state: options.defValue};
     const {startedAction, succeededAction, failedAction, endedAction, invalidatedAction} = actionsCreator(actionName);
     const setterFactory = (...pipes) => piper(...pipes, setTimestampFactory(options));
     const setters = {
