@@ -7,7 +7,8 @@ const assert = chai.assert;
 const middlewares = [];
 const mockStore = configureStore(middlewares)();
 import * as sinon from "sinon";
-import { customElement, item, property } from "@uxland/uxl-polymer2-ts";
+import {customElement, property, query} from "lit-element";
+import {statePath} from "../../src/state-path";
 
 const fixtureElementName = "redux-mixin-fixture";
 const defaultComponentName = "custom-element";
@@ -32,14 +33,15 @@ const addComponentToFixture = <T>(componentName: string) => {
 const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponent & LitElement = (selector = propertySelector) => {
     const componentName = getDefaultComponentName();
 
+    // @ts-ignore
     @customElement(componentName)
     class Component extends reduxMixin(mockStore)(LitElement) implements DefaultTestComponent {
         render(){
             return html `<h1 id="header">${this.myProperty}</h1>`
         }
-        @property({ statePath: selector})
+        @statePath(selector)
         myProperty: string;
-        @item("header") header: HTMLHeadElement;
+        @query("#header") header: HTMLHeadElement;
     }
     return addComponentToFixture(componentName);
 };
@@ -95,7 +97,7 @@ suite("redux mixin fixture", () => {
             .returns(message2);
         const mixin = parent => {
             class Mixin extends reduxMixin(mockStore)(parent) {
-                @property({ statePath: mixinSelector})
+                @statePath(mixinSelector)
                 mixinProperty: string;
             }
             return Mixin;
@@ -108,18 +110,22 @@ suite("redux mixin fixture", () => {
             .returns(message3)
             .onSecondCall()
             .returns(message4);
+        // @ts-ignore
         @customElement("mixed-component")
         class Component extends mixin(LitElement) {
 
             render(){
                 return html`<h1 id="header1">${this.componentProperty}</h1><h1 id="header2">${this.mixinProperty}</h1>`;
             }
-            @property({ statePath: selector, observer: "componentPropertyChanged" })
+            @statePath(selector)
+            @property({hasChanged(value: string, oldValue: string): boolean {
+                return true;
+                }})
             componentProperty: string;
 
-            @item("header1") header1: HTMLHeadElement;
+            @query("#header1") header1: HTMLHeadElement;
 
-            @item("header2") header2: HTMLElement;
+            @query("#header2") header2: HTMLElement;
 
             componentPropertyChanged(current: string, old: string) {}
         }

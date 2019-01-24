@@ -2,7 +2,7 @@ import createActionThunk from "../../src/create-action-thunk";
 import {Action} from "../../src";
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import flatten from "lodash-es/flatten";
+import flatten from "ramda/es/flatten";
 
 const type = 'ACTION';
 const actionCreator = (base: string) => (action: string) => `${base}_${action}`;

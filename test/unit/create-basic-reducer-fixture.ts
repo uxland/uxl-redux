@@ -1,6 +1,7 @@
 import createBasicReducer from "../../src/create-basic-reducer";
 import {assert} from 'chai';
-
+import lensProp from 'ramda/es/lensProp';
+import {factory} from "../../src/path-resolver";
 const action = 'MY-ACTION';
 suite('create basic reducer fixture', () =>{
     test('basic reducer should initialize default value', () =>{
@@ -30,11 +31,11 @@ suite('create basic reducer fixture', () =>{
     });
     test('basic reducer should set subproperty if path is supplied', () =>{
        const state = {property1: 'hello', property2: 'bye'};
-       let reducer = createBasicReducer(action, {path: 'property1'});
+       let reducer = createBasicReducer(action, {path: lensProp('property1')});
        let newState = reducer(state, {type: action, payload: 'hello world'});
        assert.isTrue(state !== newState);
        assert.deepEqual(newState, {property1: 'hello world', property2: 'bye'});
-       reducer = createBasicReducer(action, {path: a => a.meta});
+       reducer = createBasicReducer(action, {path: factory(a => lensProp(a.meta))});
        newState = reducer(state, {type: action, payload: 'hello world again', meta: 'property2'});
        assert.isTrue(newState !== state);
        assert.deepEqual(newState, {property1: 'hello', property2: 'hello world again'});

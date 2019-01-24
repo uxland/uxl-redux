@@ -13,7 +13,7 @@ export function reduxMixin<T = any>(store: Store<any, any>) {
     return dedupingMixin(parent => {
         class mixin extends parent {
             connectedCallback() {
-                const properties = collect(this.constructor, "properties");
+                const properties = collect(this.constructor, "uxlReduxStatePaths");
                 bind(this, properties, store);
                 super.connectedCallback();
             }
@@ -22,7 +22,7 @@ export function reduxMixin<T = any>(store: Store<any, any>) {
                 if(super.disconnectedCallback)
                     super.disconnectedCallback();
             }
-        };
+        }
         return (<any>mixin) as IReduxMixin<T>;
     });
 }

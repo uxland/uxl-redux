@@ -1,7 +1,6 @@
-import identity from 'lodash-es/identity';
-import isNull from 'lodash-es/isNull';
-import isUndefined from 'lodash-es/isUndefined'
-import isFunction from 'lodash-es/isFunction';
+import is from 'ramda/es/is';
+import isNil from 'ramda/es/isNil';
+import identity from 'ramda/es/identity';
 import {Action as ReduxAction} from "redux";
 
 
@@ -16,18 +15,20 @@ export interface Action<Payload = any, Meta = any> extends ReduxAction{
 const invariant = (condition: boolean, message: string) =>{
     if(!condition)
         throw new Error(message);
-}
-export const createAction: <Payload = any, Meta = any>(type: string, payloadCreator?: (...args: any[]) => Payload, metaCreator?: (...args:any[]) => Meta) => (...args: any[]) => Action<Payload, Meta> =
-    (type, payloadCreator = identity, metaCreator) => {
-        invariant(isFunction(payloadCreator) || isNull(payloadCreator), 'Expected payloadCreator to be a function, undefined or null');
-        const hasMeta = isFunction(metaCreator);
+};
+export type PayloadCreator<Payload = any> = (...args: any[]) => Payload;
 
-        const finalPayloadCreator: (...args: any[]) => any = isNull(payloadCreator) || payloadCreator === identity ? identity :
+export const createAction: <Payload = any, Meta = any>(type: string, payloadCreator?: PayloadCreator<Payload>, metaCreator?: (...args:any[]) => Meta) => (...args: any[]) => Action<Payload, Meta> =
+    (type, payloadCreator = identity, metaCreator) => {
+        invariant(is(Function, payloadCreator) || isNil(payloadCreator), 'Expected payloadCreator to be a function, undefined or null');
+        const hasMeta = is(Function, metaCreator);
+
+        const finalPayloadCreator: (...args: any[]) => any = isNil(payloadCreator) || payloadCreator === identity ? identity :
             (head, ...args) => head instanceof Error ? head : payloadCreator(head, ...args);
-        const actionCreator = (...args) =>{
+        const actionCreator = (...args: any[]) =>{
             const action = <Action>{type};
-            const payload = finalPayloadCreator(...args);
-            if(!isUndefined(payload))
+            const payload = args.length ? finalPayloadCreator(...args) : finalPayloadCreator(null);
+            if(!isNil(payload))
                 action.payload = payload;
             if(hasMeta)
                 action.meta = metaCreator(...args);

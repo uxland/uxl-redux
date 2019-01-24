@@ -1,17 +1,11 @@
-import { isPlainObject, isString } from 'lodash-es';
-
-export function isFSA(action) {
-    return (
-        isPlainObject(action) &&
-        isString(action.type) &&
-        Object.keys(action).every(isValidKey)
-    );
-}
-
-export function isError(action) {
-    return isFSA(action) && action.error === true;
-}
-
-function isValidKey(key) {
-    return ['type', 'payload', 'error', 'meta'].indexOf(key) > -1;
-}
+import is from 'ramda/es/is';
+import equals from 'ramda/es/equals';
+import anyPass from 'ramda/es/anyPass';
+import all from 'ramda/es/all';
+import keys from 'ramda/es/keys'
+const isType = equals('type');
+const isPayload = equals('payload');
+const isErrorProp = equals('error');
+const isMeta = equals('meta');
+const isValidKey: (key: string) => boolean = anyPass([isType, isPayload, isErrorProp, isMeta]);
+export const isFSA: (action) => boolean  = action => is(Object, action) && is(String, action.type) && all(isValidKey, keys(action));
