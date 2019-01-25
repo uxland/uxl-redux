@@ -78,11 +78,10 @@
         "test": "test"
     },
     "publishConfig": {
-        "access": "public",
-        "tag": "rc2.0"
+        "access": "public"
     },
     "release": {
-        "branch": "rc2.0"
+        "branch": "master"
     },
     "types": "./index.d.ts"
 }
