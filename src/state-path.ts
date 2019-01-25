@@ -1,5 +1,7 @@
-export type StatePathFunction = (state: object) => any;
+import {PropertyDeclaration} from "lit-element";
 
+export type StatePathFunction = (state: object) => any;
+import {property} from 'lit-element/lib/decorators'
 const createReduxStatePath = (statePath: StatePathFunction, proto: any, propName: string) =>{
     const properties =  Object.keys(Object.assign({}, proto.constructor.uxlReduxStatePaths))
         .filter(key => !proto.__proto__.constructor.uxlReduxStatePaths || !proto.__proto__.constructor.uxlReduxStatePaths[key])
@@ -13,6 +15,9 @@ const createReduxStatePath = (statePath: StatePathFunction, proto: any, propName
         configurable: true
     });
 };
-export const statePath = (statePath:  StatePathFunction) => (proto: any, propName: string) =>{
+const defaultOptions: PropertyDeclaration = {reflect: true};
+const createPropertyOptions: (options?: PropertyDeclaration) => PropertyDeclaration = (options = {}) => ({...defaultOptions, ...options});
+export const statePath = (statePath:  StatePathFunction, options?: PropertyDeclaration) => (proto: any, propName: string) =>{
     createReduxStatePath(statePath, proto, propName);
+    property(createPropertyOptions(options))(proto, propName);
 };
