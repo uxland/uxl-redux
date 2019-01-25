@@ -15,9 +15,8 @@ const createReduxStatePath = (statePath: StatePathFunction, proto: any, propName
         configurable: true
     });
 };
-const defaultOptions: PropertyDeclaration = {reflect: true};
-const createPropertyOptions: (options?: PropertyDeclaration) => PropertyDeclaration = (options = {}) => ({...defaultOptions, ...options});
 export const statePath = (statePath:  StatePathFunction, options?: PropertyDeclaration) => (proto: any, propName: string) =>{
     createReduxStatePath(statePath, proto, propName);
-    property(createPropertyOptions(options))(proto, propName);
+    if(proto.createProperty)
+        property(options)(proto, propName);
 };
