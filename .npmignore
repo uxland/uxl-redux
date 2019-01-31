@@ -5,3 +5,6 @@ polymer.json
 tsconfig.json
 gulp/
 gulpfile.js
+.travis.yml
+README.md
+wct.config.json
