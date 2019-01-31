@@ -1,5 +1,5 @@
 import { reduxMixin } from "../../src/redux-mixin";
-import { html, LitElement } from "@polymer/lit-element/lit-element";
+import { html, LitElement } from "lit-element/lit-element";
 
 import configureStore from "redux-mock-store";
 
