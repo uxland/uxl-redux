@@ -9,7 +9,7 @@ export interface IReduxMixin<T = any> extends LitElement {
 }
 export type ReduxMixin = <T = any>(parent: any) => IReduxMixin<T>;
 
-export function reduxMixin<T = any>(store: Store<any, any>) {
+export function reduxMixin<T = any>(store?: Store<any, any>) {
     return dedupingMixin(parent => {
         class mixin extends parent {
             connectedCallback() {
