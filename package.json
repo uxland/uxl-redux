@@ -48,9 +48,9 @@
         "wct-browser-legacy": "^1.0.0"
     },
     "dependencies": {
-        "@uxland/uxl-utilities": "^1.1.4",
+        "@uxland/uxl-utilities": "^2.0.3",
         "date-fns": "^2.0.0-alpha.9",
-        "lit-element": "^2.0.0-rc.3",
+        "lit-element": "^2.0.0-rc.5",
         "ramda": "^0.26.1",
         "reduce-reducers": "^0.3.0",
         "redux": "^4.0.0",
