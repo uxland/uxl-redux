@@ -40,5 +40,4 @@ export const createAction: <Payload = any, Meta = any>(type: string, payloadCrea
         return actionCreator;
     };
 
-export default createAction;
 

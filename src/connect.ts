@@ -1,25 +1,42 @@
-import {Store} from "redux";
-import {ConnectMixinFunction, Constructable, PropertyWatch} from "./types";
+import { dedupingMixin } from "@polymer/polymer/lib/utils/mixin";
+import {Store, Unsubscribe} from "redux";
+import {ConnectMixin, ConnectMixinFunction, PropertyWatch} from "./types";
+import {bind} from "./bind";
+import {unbind} from "./unbind";
+import {Constructor, LitElement} from "lit-element";
 
-const connect: (defaultStore?: Store) => ConnectMixinFunction = defaultStore => <T extends Constructable<any> = any>(superClass: T): T =>
-    class extends superClass{
-        static get reduxDefaultStore(): Store | undefined{
+export const connect: (defaultStore: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
+    class connectMixin extends superClass implements ConnectMixin {
+        __reduxStoreSubscriptions__: Unsubscribe[];
+
+        static get reduxDefaultStore(): Store | undefined {
             return defaultStore;
         }
-        private static __uxlReduxWatchedProperties: {[key: string]: PropertyWatch};
-        protected static get uxlReduxWatchedProperties(): {[key: string]: PropertyWatch}{
-            if(!this.__uxlReduxWatchedProperties)
+
+        private static __uxlReduxWatchedProperties: { [key: string]: PropertyWatch };
+
+        protected static get uxlReduxWatchedProperties(): { [key: string]: PropertyWatch } {
+            if (!this.__uxlReduxWatchedProperties)
                 this.__uxlReduxWatchedProperties = {};
             return this.__uxlReduxWatchedProperties;
         }
-        public static watchProperty(name: PropertyKey, options: PropertyWatch){
+
+        public static watchProperty(name: PropertyKey, options: PropertyWatch) {
             this.uxlReduxWatchedProperties[String(name)] = options;
         }
-        connectedCallback(){
 
+        connectedCallback(): void {
+            bind(this);
+            super.connectedCallback();
         }
-        disconnectedCallback(){
 
+        disconnectedCallback(): void {
+            unbind(this);
+            super.disconnectedCallback && super.disconnectedCallback();
         }
-    };
-export default connect;
+    }
+
+    return <any>connectMixin;
+});
+
+

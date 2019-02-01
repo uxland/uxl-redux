@@ -43,5 +43,4 @@ const storeSubscriptions = (element: LitElement) => (subscriptions: Unsubscribe[
     enumerable: true,
 });
 
-const bind: (element: LitElement) => void = element => pipe(getWatches, getAllStores, subscribe(element), storeSubscriptions(element), nop)(element);
-export default bind;
+export const bind: (element: LitElement) => void = element => pipe(getWatches, getAllStores, subscribe(element), storeSubscriptions(element), nop)(element);

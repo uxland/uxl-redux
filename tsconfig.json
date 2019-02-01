@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "es2017",
-    "outDir": "./dist",
+    "outDir": "./es",
     "rootDir": "./src",
     "sourceMap": true,
     "declaration": true,
@@ -27,7 +27,7 @@
   },
   "exclude": [
     "node_modules",
-    "dist",
+    "es",
     "test"
   ]
 }

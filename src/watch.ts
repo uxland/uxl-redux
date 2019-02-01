@@ -17,5 +17,4 @@ const watchProperty = <T = any>(store: Store, selector: Selector<T> | string, op
         property(options)(proto, name);
 };
 
-const watch = curry<Store, Selector, PropertyDeclaration, any>(watchProperty);
-export default watch;
+export const watch = curry<Store<any, any>, Selector, PropertyDeclaration, any>(watchProperty);
