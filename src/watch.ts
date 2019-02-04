@@ -9,7 +9,7 @@ import always from 'ramda/es/always';
 import {ConnectAddOn, Selector} from "./connect";
 const toLensSelector = (path: string) => view(lensPath(path.split('.')));
 const getSelector = (selector: Selector | string) => when(is(String), toLensSelector)(selector);
-const getStore = (store: Store, proto: any) => when(isNil, always((<ConnectAddOn>proto).reduxDefaultStore))(store);
+const getStore = (store: Store, proto: any) => when(isNil, always((<ConnectAddOn>proto.constructor).reduxDefaultStore))(store);
 export interface WatchOptions<> {
     store?: Store<any, any>;
     propertyOptions?: PropertyDeclaration;
