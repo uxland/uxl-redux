@@ -10,8 +10,12 @@ import {ConnectAddOn, Selector} from "./connect";
 const toLensSelector = (path: string) => view(lensPath(path.split('.')));
 const getSelector = (selector: Selector | string) => when(is(String), toLensSelector)(selector);
 const getStore = (store: Store, proto: any) => when(isNil, always((<ConnectAddOn>proto).reduxDefaultStore))(store);
-export const watch = <T = any>(store: Store<any, any>) =>(selector: Selector<T> | string, options?: PropertyDeclaration) => (proto: any, name: PropertyKey) =>{
-    (<ConnectAddOn>proto.constructor).watchProperty(name, {name: String(name), selector: getSelector(selector), store: getStore(store, proto)});
+export interface WatchOptions<> {
+    store?: Store<any, any>;
+    propertyOptions?: PropertyDeclaration;
+}
+export const watch = <T = any>(selector: Selector<T> | string, options?: WatchOptions) => (proto: any, name: PropertyKey) =>{
+    (<ConnectAddOn>proto.constructor).watchProperty(name, {name: String(name), selector: getSelector(selector), store: getStore(options.store, proto)});
     if(proto.constructor.createProperty)
-        property(options)(proto, name);
+        property(options.propertyOptions)(proto, name);
 };

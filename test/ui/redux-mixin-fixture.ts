@@ -39,7 +39,7 @@ const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponen
         render(){
             return html `<h1 id="header">${this.myProperty}</h1>`
         }
-        @watch(mockStore)(selector)
+        @watch(selector, {store: mockStore})
         myProperty: string;
         @query("#header") header: HTMLHeadElement;
     }
@@ -97,7 +97,7 @@ suite("redux mixin fixture", () => {
             .returns(message2);
         const mixin: MixinFunction<any> = parent => {
             class Mixin extends connect(mockStore)(parent) {
-                @watch(mockStore)(mixinSelector)
+                @watch(mixinSelector, {store: mockStore})
                 mixinProperty: string;
             }
             return <any>Mixin;
@@ -117,7 +117,7 @@ suite("redux mixin fixture", () => {
             render(){
                 return html`<h1 id="header1">${this.componentProperty}</h1><h1 id="header2">${this.mixinProperty}</h1>`;
             }
-            @watch(mockStore)(selector)
+            @watch(selector, {store: mockStore})
             @property({hasChanged(value: string, oldValue: string): boolean {
                 return true;
                 }})

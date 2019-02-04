@@ -11,7 +11,5 @@ export * from './create-basic-reducer';
 export * from './is-async-stale';
 export * from './path-resolver';
 export * from './perform-async-action';
-export * from './redux-mixin';
-export * from './state-path';
 export * from './unbind';
 export * from './watch';

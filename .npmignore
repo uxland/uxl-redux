@@ -3,5 +3,5 @@ test/
 mochawesome-report/
 polymer.json
 tsconfig.json
-gulp/
-gulpfile.js
+tsconfig-cjs.json
+tsconfig-es.json
