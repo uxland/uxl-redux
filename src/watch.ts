@@ -14,7 +14,7 @@ export interface WatchOptions<> {
     store?: Store<any, any>;
     propertyOptions?: PropertyDeclaration;
 }
-export const watch = <T = any>(selector: Selector<T> | string, options?: WatchOptions) => (proto: any, name: PropertyKey) =>{
+export const watch = <T = any>(selector: Selector<T> | string, options: WatchOptions = {}) => (proto: any, name: PropertyKey) =>{
     (<ConnectAddOn>proto.constructor).watchProperty(name, {name: String(name), selector: getSelector(selector), store: getStore(options.store, proto)});
     if(proto.constructor.createProperty)
         property(options.propertyOptions)(proto, name);

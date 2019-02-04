@@ -16,4 +16,4 @@ const walk = function(dir) {
 let files = walk(__dirname);
 files.forEach(require);*/
 //files.forEach(fileName => require(fileName));
-import './action-name-builder.fixture';
+//import './action-name-builder.fixture';
