@@ -5,6 +5,7 @@ import {unbind} from "./unbind";
 import {Constructor, LitElement} from "lit-element";
 import {MixinFunction} from "@uxland/uxl-utilities/types";
 
+
 export interface ConnectMixin {
     __reduxStoreSubscriptions__: Unsubscribe[];
 }
@@ -20,8 +21,8 @@ export interface PropertyWatch {
     store: Store;
     name: string;
 }
-export interface ConnectMixinConstructor {
-    new (...args: any[]): ConnectMixin;
+export interface ConnectMixinConstructor  extends LitElement{
+    new (...args: any[]): ConnectMixin & LitElement;
 }
 export type ConnectMixinFunction = MixinFunction<ConnectMixinConstructor>;
 export const connect: (defaultStore: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
@@ -56,5 +57,3 @@ export const connect: (defaultStore: Store<any, any>) => ConnectMixinFunction = 
     }
     return <any>connectMixin;
 });
-
-
