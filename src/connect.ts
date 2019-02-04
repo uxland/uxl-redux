@@ -25,7 +25,7 @@ export interface ConnectMixinConstructor  extends LitElement{
     new (...args: any[]): ConnectMixin & LitElement;
 }
 export type ConnectMixinFunction = MixinFunction<ConnectMixinConstructor>;
-export const connect: (defaultStore: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
+export const connect: (defaultStore?: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
     class connectMixin extends superClass implements ConnectMixin {
         __reduxStoreSubscriptions__: Unsubscribe[];
 
