@@ -37,7 +37,7 @@ suite('create action thunk fixture', () => {
       const spy = sinon.spy();
       try {
           thunk(spy);
-      }catch  {
+      }catch (e) {
 
       }
       return spy;

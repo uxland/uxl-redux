@@ -1,4 +1,4 @@
-import resolvePath, {factory} from "../../src/path-resolver";
+import {resolvePath, factory} from "../../src/path-resolver";
 import * as sinon from 'sinon';
 import {Action} from "../../src";
 import {assert} from 'chai';
