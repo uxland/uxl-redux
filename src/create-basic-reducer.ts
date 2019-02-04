@@ -2,8 +2,7 @@ import {Action} from "./create-action";
 import {Reducer} from "redux";
 import {Lens} from 'ramda';
 import set from 'ramda/es/set';
-import {resolvePath} from "./path-resolver";
-import {PathResolver} from "./types";
+import {resolvePath, PathResolver} from "./path-resolver";
 
 export interface BasicOptions<T = any> {
     defValue?: T;

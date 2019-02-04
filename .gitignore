@@ -5,3 +5,5 @@ src/**/*.js.map
 test/**/*.js
 test/**/*.js.map
 mochawesome-report/
+!test/unit/setup.js
+!test/unit/tests.loader.js

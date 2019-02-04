@@ -1,5 +1,5 @@
-import { reduxMixin } from "../../src/redux-mixin";
-import { html, LitElement } from "@polymer/lit-element/lit-element";
+import {connect, watch} from "../../src";
+import {html, LitElement} from "lit-element/lit-element";
 
 import configureStore from "redux-mock-store";
 
@@ -8,7 +8,7 @@ const middlewares = [];
 const mockStore = configureStore(middlewares)();
 import * as sinon from "sinon";
 import {customElement, property, query} from "lit-element";
-import {statePath} from "../../src/state-path";
+import {MixinFunction} from "@uxland/uxl-utilities/types";
 
 const fixtureElementName = "redux-mixin-fixture";
 const defaultComponentName = "custom-element";
@@ -23,7 +23,7 @@ interface DefaultTestComponent {
     header: HTMLHeadElement;
 }
 
-const propertySelector = sinon.spy(state => "Hello from redux state");
+const propertySelector = sinon.spy(() => "Hello from redux state");
 const addComponentToFixture = <T>(componentName: string) => {
     const container: HTMLDivElement = fixture(fixtureElementName);
     const component: T = <any>document.createElement(componentName);
@@ -35,11 +35,11 @@ const createDefaultComponent: (selector?: (state) => any) => DefaultTestComponen
 
     // @ts-ignore
     @customElement(componentName)
-    class Component extends reduxMixin(mockStore)(LitElement) implements DefaultTestComponent {
+    class Component extends connect(mockStore)(LitElement) implements DefaultTestComponent {
         render(){
             return html `<h1 id="header">${this.myProperty}</h1>`
         }
-        @statePath(selector)
+        @watch(mockStore)(selector)
         myProperty: string;
         @query("#header") header: HTMLHeadElement;
     }
@@ -57,7 +57,7 @@ suite("redux mixin fixture", () => {
         assert.equal(component.header.innerText, "Hello from redux state");
     });
     test("update test", () => {
-        let component = createDefaultComponent();
+        createDefaultComponent();
         mockStore.dispatch({ type: "@@NOP" });
         assert.isTrue(propertySelector.calledTwice);
     });
@@ -95,12 +95,12 @@ suite("redux mixin fixture", () => {
             .returns(message1)
             .onSecondCall()
             .returns(message2);
-        const mixin = parent => {
-            class Mixin extends reduxMixin(mockStore)(parent) {
-                @statePath(mixinSelector)
+        const mixin: MixinFunction<any> = parent => {
+            class Mixin extends connect(mockStore)(parent) {
+                @watch(mockStore)(mixinSelector)
                 mixinProperty: string;
             }
-            return Mixin;
+            return <any>Mixin;
         };
         const message3 = "Hello from component";
         const message4 = "Hello again from component";
@@ -117,7 +117,7 @@ suite("redux mixin fixture", () => {
             render(){
                 return html`<h1 id="header1">${this.componentProperty}</h1><h1 id="header2">${this.mixinProperty}</h1>`;
             }
-            @statePath(selector)
+            @watch(mockStore)(selector)
             @property({hasChanged(value: string, oldValue: string): boolean {
                 return true;
                 }})

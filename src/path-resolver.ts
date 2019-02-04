@@ -4,7 +4,11 @@ import is from 'ramda/es/is';
 import ifElse from 'ramda/es/ifElse';
 import identity from 'ramda/es/identity';
 import 'reflect-metadata';
-import {PathResolver} from "./types";
+
+export interface PathResolver {
+    resolver: (action: Action) => Lens;
+}
+
 export type Resolver = (action: Action) => Lens;
 export const factory =  (resolver: Resolver) => <PathResolver>{resolver};
 

@@ -1,10 +1,29 @@
 import { dedupingMixin } from "@polymer/polymer/lib/utils/mixin";
 import {Store, Unsubscribe} from "redux";
-import {ConnectMixin, ConnectMixinFunction, PropertyWatch} from "./types";
 import {bind} from "./bind";
 import {unbind} from "./unbind";
 import {Constructor, LitElement} from "lit-element";
+import {MixinFunction} from "@uxland/uxl-utilities/types";
 
+export interface ConnectMixin {
+    __reduxStoreSubscriptions__: Unsubscribe[];
+}
+export type Selector<T = any> = (state: any) => T;
+
+export interface ConnectAddOn {
+    uxlReduxWatchedProperties: {[key: string]: PropertyWatch};
+    reduxDefaultStore: Store;
+    watchProperty: (name: PropertyKey, watch: PropertyWatch) => void;
+}
+export interface PropertyWatch {
+    selector: Selector;
+    store: Store;
+    name: string;
+}
+export interface ConnectMixinConstructor {
+    new (...args: any[]): ConnectMixin;
+}
+export type ConnectMixinFunction = MixinFunction<ConnectMixinConstructor>;
 export const connect: (defaultStore: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
     class connectMixin extends superClass implements ConnectMixin {
         __reduxStoreSubscriptions__: Unsubscribe[];
@@ -35,7 +54,6 @@ export const connect: (defaultStore: Store<any, any>) => ConnectMixinFunction = 
             super.disconnectedCallback && super.disconnectedCallback();
         }
     }
-
     return <any>connectMixin;
 });
 

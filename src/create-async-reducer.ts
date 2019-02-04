@@ -5,8 +5,7 @@ import is from 'ramda/es/is';
 import view from 'ramda/es/view';
 import isNil from 'ramda/es/isNil';
 import set from 'ramda/es/set';
-import {resolvePath} from "./path-resolver";
-import {PathResolver} from "./types";
+import {resolvePath, PathResolver} from "./path-resolver";
 
 export interface Options<T = any> extends BasicOptions<T>{
     timestampAccessor?: (action: Action) => Date;

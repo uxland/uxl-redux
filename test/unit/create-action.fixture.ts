@@ -1,5 +1,5 @@
 import {isFSA} from './flux-standard-action';
-import {createAction} from "../../es/create-action";
+import {createAction} from "../../src/create-action";
 import {assert} from 'chai';
 const type = 'TYPE';
 suite('create action fixture', () =>{

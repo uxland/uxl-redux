@@ -1,4 +1,3 @@
-import {ConnectAddOn, PropertyWatch} from "./types";
 import {LitElement} from "lit-element";
 import pipe from 'ramda/es/pipe';
 import values from 'ramda/es/values';
@@ -9,6 +8,7 @@ import filter from 'ramda/es/filter';
 import equals from 'ramda/es/equals';
 import reject from 'ramda/es/reject';
 import {Store, Unsubscribe} from "redux";
+import {ConnectAddOn, PropertyWatch} from "./connect";
 const nop = () =>{};
 const getWatches = (element: LitElement) => (<ConnectAddOn><any>element.constructor).uxlReduxWatchedProperties;
 const mapWatches = (watchesMap: {[key: string]:PropertyWatch}) => values(watchesMap);
@@ -25,8 +25,9 @@ const updateProperties = (element: LitElement) => map<PropertyState, void>(chang
     if(element.requestUpdate)
         element.requestUpdate(change.name, change.old).then(nop);
 });
+const getStoreWatches = (element: LitElement) =>(store: Store<any, any>) =>  pipe(getWatches, mapWatches, getWatchesByStore(store))(element);
 const listen = (element: LitElement, store: Store) => {
-    const watches = pipe(getWatches, mapWatches, getWatchesByStore(store))(element);
+    const watches = getStoreWatches(element)(store);
     return () => pipe(getProperties(store.getState(), element), rejectUnchanged, updateProperties(element), nop)(watches)
 };
 const listener = (element: LitElement) => (store: Store) => store.subscribe(listen(element, store));
@@ -42,5 +43,11 @@ const storeSubscriptions = (element: LitElement) => (subscriptions: Unsubscribe[
     configurable: true,
     enumerable: true,
 });
-
-export const bind: (element: LitElement) => void = element => pipe(getWatches, getAllStores, subscribe(element), storeSubscriptions(element), nop)(element);
+const initializeValues = (element: LitElement) => (stores: Store<any, any>[]) =>{
+    const storeWatches = map(getStoreWatches(element), stores);
+    storeWatches.forEach(value => {
+        value.forEach(x => element[x.name] = x.selector(x.store.getState()));
+    });
+    return stores;
+}
+export const bind: (element: LitElement) => void = element => pipe(getWatches, getAllStores, initializeValues(element), subscribe(element), storeSubscriptions(element), nop)(element);

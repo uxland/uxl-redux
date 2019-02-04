@@ -13,6 +13,5 @@ export * from './path-resolver';
 export * from './perform-async-action';
 export * from './redux-mixin';
 export * from './state-path';
-export * from './types';
 export * from './unbind';
 export * from './watch';
