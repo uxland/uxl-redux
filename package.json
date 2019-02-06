@@ -11,7 +11,7 @@
         "url": "https://github.com/uxland/uxl-redux/issues"
     },
     "author": "UXLand <dev@uxland.es> (http://www.uxland.es)",
-    "main": "es/index.js",
+    "main": "dist/index.js",
     "module": "index.js",
     "types": "index.d.ts",
     "keywords": [
