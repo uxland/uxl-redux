@@ -227,7 +227,7 @@ suite('create async reducer fixture path resolver', () => {
        assert.notStrictEqual(state, newState);
        assert.deepEqual(newState, {...state, data:{...state.data, elapsed: 65}});
    });
-   test('handling action ended should not set elapsed is not supplied', () =>{
+   test('handling action ended should not set elapsed if not supplied', () =>{
        let reducer = createAsyncReducer<number>(action, {pathResolver: dataLensProp});
        const state: any = {data: {isFetching: false, didInvalidate: true, error: true, errorDescription: 'myError', exceptions: [],state: 34, timestamp: new Date() }};
        let newState = reducer(state, {type: endedAction});
