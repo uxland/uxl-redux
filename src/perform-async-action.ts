@@ -3,10 +3,13 @@ import {createAsyncActions} from "./create-async-actions";
 export interface ErrorHandler {
     (error: Error): Promise<any>;
 }
-
-export const performAsyncAction =  <T = any> (dispatch: Dispatch) =>  (actionName) =>{
-    const actions = createAsyncActions(actionName);
-    return (fn: (...args: any) => Promise<T>, errorHandler?: ErrorHandler) => async(meta: any, ...args: any) =>{
+export interface Executor<T = any> {
+    (meta: any, ...args: any[]): Promise<T>
+}
+export const performAsyncAction: <T = any>(dispatch: Dispatch) => (actionType: string, fn: Executor, errorHandler?: ErrorHandler) => (meta: any, ...args: any[]) => Promise<T>
+ = dispatch => (actionType, fn, errorHandler) => {
+    const actions = createAsyncActions(actionType);
+    return async (meta, args) => {
         let started = window.performance.now();
         try {
             dispatch({type: actions.started, meta});
