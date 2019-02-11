@@ -7,7 +7,7 @@ export interface Executor<T = any> {
     (meta: any, ...args: any[]): Promise<T>
 }
 
-export const performAsyncAction: <T = any>(dispatch: Dispatch) => (actionType: string, fn: Executor, errorHandler?: ErrorHandler) => (meta: any) =>(...args: any[]) => Promise<T>
+export const performAsyncAction: <T = any>(dispatch: Dispatch) => (actionType: string, fn: Executor, errorHandler?: ErrorHandler) => (meta?: any) =>(...args: any[]) => Promise<T>
  = dispatch => (actionType, fn, errorHandler) => {
     const actions = createAsyncActions(actionType);
     return meta => async(...args: any) =>{
