@@ -7,7 +7,7 @@ import {Store} from "redux";
 import {property, PropertyDeclaration} from "lit-element";
 import always from 'ramda/es/always';
 import {ConnectAddOn, Selector} from "./connect";
-import {createWatchedReduxProperty} from "../dev/src/create-watched-redux-property";
+import {createWatchedReduxProperty} from "./watched-redux-property";
 const toLensSelector = (path: string) => view(lensPath(path.split('.')));
 const getSelector = (selector: Selector | string) => when(is(String), toLensSelector)(selector);
 const getStore = (store: Store, proto: any) => when(isNil, always((<ConnectAddOn>proto.constructor).reduxDefaultStore))(store);

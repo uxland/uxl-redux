@@ -19,7 +19,7 @@ export const setDefaultStore = (proto: any, store: Store) =>{
     });
 };
 
-export const watchedReduxProperty = (propConfig: WatchOptions, proto: any, propName: string) =>{
+export const createWatchedReduxProperty = (propConfig: WatchOptions, proto: any, propName: string) =>{
     const properties =  Object.keys(Object.assign({}, proto.constructor.watchedReduxProperties))
         .filter(key => !proto.__proto__.constructor.watchedReduxProperties || !proto.__proto__.constructor.watchedReduxProperties[key])
         .reduce((previousValue, currentValue) => {return {...previousValue, [currentValue]: proto.constructor.watchedReduxProperties[currentValue]}}, {[propName]: propConfig});
