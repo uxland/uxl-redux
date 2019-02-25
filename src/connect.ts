@@ -32,21 +32,9 @@ export const connect: (defaultStore?: Store<any, any>) => ConnectMixinFunction =
     class connectMixin extends superClass implements ConnectMixin {
         __reduxStoreSubscriptions__: Unsubscribe[];
 
-        /*static get reduxDefaultStore(): Store | undefined {
+        static get reduxDefaultStore(): Store | undefined {
             return defaultStore;
-        }*/
-
-       /* private static __uxlReduxWatchedProperties: { [key: string]: PropertyWatch };
-
-        protected static get uxlReduxWatchedProperties(): { [key: string]: PropertyWatch } {
-            if (!this.__uxlReduxWatchedProperties)
-                this.__uxlReduxWatchedProperties = {};
-            return this.__uxlReduxWatchedProperties;
         }
-
-        public static watchProperty(name: PropertyKey, options: PropertyWatch) {
-            this.uxlReduxWatchedProperties[String(name)] = options;
-        }*/
 
         connectedCallback(): void {
             bind(this);
