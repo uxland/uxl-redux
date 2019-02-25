@@ -65,14 +65,14 @@ export const createAsyncReducer = <T>(actionName: string, options: Options<T> = 
     const {startedAction, succeededAction, failedAction, endedAction, invalidatedAction} = actionsCreator(actionName);
     const isStarted = typeEqual(startedAction), isFailed = typeEqual(failedAction), isSucceeded = typeEqual(succeededAction), isEnded = typeEqual(endedAction), isInvalidated = typeEqual(invalidatedAction);
     const stateGetter = getState(options);
-    const fetchingStateGetter = keepPreviousStateGetter(options.defValue || fetchingState)(options);
+    const fetchingStateGetter = keepPreviousStateGetter(options.defValue ? {...initialValue, isFetching: true} : fetchingState)(options);
     const failedStateGetter = keepPreviousStateGetter(defaultState)(options);
     const getPayload = (action: Action) => options.payloadAccessor ? options.payloadAccessor(action) : action.payload;
     const setTimestamp = (action: Action) => (state: AsyncState<T>) =>{
         const timestamp = options.timestampAccessor ? options.timestampAccessor(action) : action.timestamp;
         return timestamp ? set(lensProp('timestamp'), timestamp, state) : state
     };
-    const startedStateFactory: StateFactory = pipe(fetchingStateGetter, when( () => options.keepPreviousStateOnStarted, s => ({...fetchingState, state: s})));
+    const startedStateFactory: StateFactory = pipe(fetchingStateGetter, when( () => options.keepPreviousStateOnStarted, s => ({...fetchingState, state: s.state})));
     const succeedFactory: StateFactory = (state, action) => set(lensProp('state'), getPayload(action), defaultState);
     const failedFactory: StateFactory = (state, action) =>  pipe(failedStateGetter, s => ({...s, ...defaultState, ...extractExceptions(action), ...extractErrorDescription(action), error: true}))(state, action);
     const endedFactory: StateFactory = (state, action) => (action.elapsed || action.payload) ? {...stateGetter(state, action), elapsed: action.elapsed || action.payload} : stateGetter(state, action);
