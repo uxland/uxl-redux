@@ -8,9 +8,10 @@ import filter from 'ramda/es/filter';
 import equals from 'ramda/es/equals';
 import reject from 'ramda/es/reject';
 import {Store, Unsubscribe} from "redux";
-import {ConnectAddOn, PropertyWatch} from "./connect";
+import {PropertyWatch} from "./connect";
+import {getWatchedProperties} from "./watched-redux-property";
 const nop = () =>{};
-const getWatches = (element: LitElement) => (<ConnectAddOn><any>element.constructor).uxlReduxWatchedProperties;
+
 const mapWatches = (watchesMap: {[key: string]:PropertyWatch}) => values(watchesMap);
 const getWatchesByStore: (store: Store) => (watches: PropertyWatch[])=> PropertyWatch[] = store => filter<PropertyWatch>(propEq('store', store));
 interface PropertyState {
@@ -25,7 +26,7 @@ const updateProperties = (element: LitElement) => map<PropertyState, void>(chang
     if(element.requestUpdate)
         element.requestUpdate(change.name, change.old).then(nop);
 });
-const getStoreWatches = (element: LitElement) =>(store: Store<any, any>) =>  pipe(getWatches, mapWatches, getWatchesByStore(store))(element);
+const getStoreWatches = (element: LitElement) =>(store: Store<any, any>) =>  pipe(getWatchedProperties, mapWatches, getWatchesByStore(store))(element);
 const listen = (element: LitElement, store: Store) => {
     const watches = getStoreWatches(element)(store);
     return () => pipe(getProperties(store.getState(), element), rejectUnchanged, updateProperties(element), nop)(watches)
@@ -49,5 +50,6 @@ const initializeValues = (element: LitElement) => (stores: Store<any, any>[]) =>
         value.forEach(x => element[x.name] = x.selector(x.store.getState()));
     });
     return stores;
-}
-export const bind: (element: LitElement) => void = element => pipe(getWatches, getAllStores, initializeValues(element), subscribe(element), storeSubscriptions(element), nop)(element);
+};
+export const bind: (element: LitElement) => void = element =>
+    pipe(getWatchedProperties, getAllStores, initializeValues(element), subscribe(element), storeSubscriptions(element), nop)(element);

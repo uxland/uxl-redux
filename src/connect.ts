@@ -4,6 +4,7 @@ import {bind} from "./bind";
 import {unbind} from "./unbind";
 import {Constructor, LitElement} from "lit-element";
 import {MixinFunction} from "@uxland/uxl-utilities/types";
+import {WatchOptions} from "./watch";
 
 
 export interface ConnectMixin {
@@ -25,15 +26,17 @@ export interface ConnectMixinConstructor  extends LitElement{
     new (...args: any[]): ConnectMixin & LitElement;
 }
 export type ConnectMixinFunction = MixinFunction<ConnectMixinConstructor>;
+
+
 export const connect: (defaultStore?: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
     class connectMixin extends superClass implements ConnectMixin {
         __reduxStoreSubscriptions__: Unsubscribe[];
 
-        static get reduxDefaultStore(): Store | undefined {
+        /*static get reduxDefaultStore(): Store | undefined {
             return defaultStore;
-        }
+        }*/
 
-        private static __uxlReduxWatchedProperties: { [key: string]: PropertyWatch };
+       /* private static __uxlReduxWatchedProperties: { [key: string]: PropertyWatch };
 
         protected static get uxlReduxWatchedProperties(): { [key: string]: PropertyWatch } {
             if (!this.__uxlReduxWatchedProperties)
@@ -43,7 +46,7 @@ export const connect: (defaultStore?: Store<any, any>) => ConnectMixinFunction =
 
         public static watchProperty(name: PropertyKey, options: PropertyWatch) {
             this.uxlReduxWatchedProperties[String(name)] = options;
-        }
+        }*/
 
         connectedCallback(): void {
             bind(this);
