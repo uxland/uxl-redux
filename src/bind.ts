@@ -19,7 +19,7 @@ interface PropertyState {
     current: any,
     old?: any;
 }
-const getProperties = (state: any, litElement) => map<PropertyWatch, PropertyState>(x => ({name: x.name, old: litElement[x.name], current: x.selector(state)}));
+const getProperties = (state: any, litElement) => map<PropertyWatch, PropertyState>(x => ({name: x.name, old: litElement[x.name], current: x.selector.call(litElement, state)}));
 const rejectUnchanged: (changes: PropertyState[]) => PropertyState[] = reject<PropertyState>(x => equals(x.old, x.current));
 const updateProperties = (element: LitElement) => map<PropertyState, void>(change =>{
     element[change.name] = change.current;
@@ -47,7 +47,7 @@ const storeSubscriptions = (element: LitElement) => (subscriptions: Unsubscribe[
 const initializeValues = (element: LitElement) => (stores: Store<any, any>[]) =>{
     const storeWatches = map(getStoreWatches(element), stores);
     storeWatches.forEach(value => {
-        value.forEach(x => element[x.name] = x.selector(x.store.getState()));
+        value.forEach(x => element[x.name] = x.selector.call(element, x.store.getState()));
     });
     return stores;
 };
