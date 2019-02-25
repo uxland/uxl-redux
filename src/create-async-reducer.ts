@@ -65,7 +65,7 @@ export const createAsyncReducer = <T>(actionName: string, options: Options<T> = 
     const {startedAction, succeededAction, failedAction, endedAction, invalidatedAction} = actionsCreator(actionName);
     const isStarted = typeEqual(startedAction), isFailed = typeEqual(failedAction), isSucceeded = typeEqual(succeededAction), isEnded = typeEqual(endedAction), isInvalidated = typeEqual(invalidatedAction);
     const stateGetter = getState(options);
-    const fetchingStateGetter = keepPreviousStateGetter(fetchingState)(options);
+    const fetchingStateGetter = keepPreviousStateGetter(options.defValue || fetchingState)(options);
     const failedStateGetter = keepPreviousStateGetter(defaultState)(options);
     const getPayload = (action: Action) => options.payloadAccessor ? options.payloadAccessor(action) : action.payload;
     const setTimestamp = (action: Action) => (state: AsyncState<T>) =>{
