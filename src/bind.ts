@@ -10,6 +10,8 @@ import reject from 'ramda/es/reject';
 import {Store, Unsubscribe} from "redux";
 import {PropertyWatch} from "./connect";
 import {getWatchedProperties} from "./watched-redux-property";
+import {timeOut} from '@polymer/polymer/lib/utils/async.js';
+import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
 const nop = () =>{};
 
 const mapWatches = (watchesMap: {[key: string]:PropertyWatch}) => values(watchesMap);
@@ -29,7 +31,9 @@ const updateProperties = (element: LitElement) => map<PropertyState, void>(chang
 const getStoreWatches = (element: LitElement) =>(store: Store<any, any>) =>  pipe(getWatchedProperties, mapWatches, getWatchesByStore(store))(element);
 const listen = (element: LitElement, store: Store) => {
     const watches = getStoreWatches(element)(store);
-    return () => pipe(getProperties(store.getState(), element), rejectUnchanged, updateProperties(element), nop)(watches)
+    let debounceJob = null;
+    const update = () => pipe(getProperties(store.getState(), element), rejectUnchanged, updateProperties(element), nop)(watches);
+    return  () => Debouncer.debounce(debounceJob, timeOut.after(5), update);
 };
 const listener = (element: LitElement) => (store: Store) => store.subscribe(listen(element, store));
 

@@ -4,8 +4,7 @@ import {bind} from "./bind";
 import {unbind} from "./unbind";
 import {Constructor, LitElement} from "lit-element";
 import {MixinFunction} from "@uxland/uxl-utilities/types";
-import {WatchOptions} from "./watch";
-
+import {microTask} from "@polymer/polymer/lib/utils/async";
 
 export interface ConnectMixin {
     __reduxStoreSubscriptions__: Unsubscribe[];
@@ -31,14 +30,12 @@ export type ConnectMixinFunction = MixinFunction<ConnectMixinConstructor>;
 export const connect: (defaultStore?: Store<any, any>) => ConnectMixinFunction = defaultStore => dedupingMixin((superClass: Constructor<LitElement>) => {
     class connectMixin extends superClass implements ConnectMixin {
         __reduxStoreSubscriptions__: Unsubscribe[];
-
+        constructor(){
+            super();
+            microTask.run(()=> bind(this));
+        }
         static get reduxDefaultStore(): Store | undefined {
             return defaultStore;
-        }
-
-        connectedCallback(): void {
-            bind(this);
-            super.connectedCallback();
         }
 
         disconnectedCallback(): void {
