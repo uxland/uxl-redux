@@ -1,7 +1,7 @@
 import createBasicReducer from "../../src/create-basic-reducer";
 import {assert} from 'chai';
-import lensProp from 'ramda/es/lensProp';
-import {factory} from "../../src/path-resolver";
+import {lensProp} from 'ramda';
+import {factory} from "../../src";
 const action = 'MY-ACTION';
 suite('create basic reducer fixture', () =>{
     test('basic reducer should initialize default value', () =>{

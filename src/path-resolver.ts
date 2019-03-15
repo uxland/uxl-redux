@@ -1,8 +1,5 @@
 import {Action} from "./create-action";
-import {Lens} from 'ramda';
-import is from 'ramda/es/is';
-import ifElse from 'ramda/es/ifElse';
-import identity from 'ramda/es/identity';
+import {Lens, is, ifElse, identity} from 'ramda';
 import 'reflect-metadata';
 
 export interface PathResolver {

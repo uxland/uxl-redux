@@ -1,5 +1,5 @@
 import {WatchOptions} from "./watch";
-import {collect} from "@uxland/uxl-utilities";
+import {collect} from "@uxland/uxl-utilities/collect";
 
 const WATCHED_PROPERTIES_PROPERTY = 'watchedReduxProperties';
 

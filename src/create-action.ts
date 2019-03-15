@@ -1,6 +1,4 @@
-import is from 'ramda/es/is';
-import isNil from 'ramda/es/isNil';
-import identity from 'ramda/es/identity';
+import {is, isNil, identity} from 'ramda';
 import {Action as ReduxAction} from "redux";
 
 

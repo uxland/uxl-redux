@@ -1,9 +1,8 @@
-import {resolvePath, factory} from "../../src/path-resolver";
+import {resolvePath, factory} from "../../src";
 import * as sinon from 'sinon';
 import {Action} from "../../src";
 import {assert} from 'chai';
-import lensPath from 'ramda/es/lensPath';
-import lensProp from 'ramda/es/lensProp';
+import {lensPath, lensProp} from 'ramda';
 suite('resolve path fixture', () =>{
    test('should resolve identity if argument is string', () =>{
        const lensP = lensProp('property1');

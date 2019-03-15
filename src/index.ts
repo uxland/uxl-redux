@@ -1,4 +1,4 @@
-if(!window['process'])
+if(window && !window['process'])
     window['process'] = { env: { NODE_ENV: 'production' } };
 export * from './action-name-builder';
 export * from './bind';

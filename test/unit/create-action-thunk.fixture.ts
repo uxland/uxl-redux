@@ -2,7 +2,7 @@ import createActionThunk from "../../src/create-action-thunk";
 import {Action} from "../../src";
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import flatten from "ramda/es/flatten";
+import {flatten} from "ramda";
 
 const type = 'ACTION';
 const actionCreator = (base: string) => (action: string) => `${base}_${action}`;
@@ -65,11 +65,11 @@ suite('create action thunk fixture', () => {
     });
     test('started action should contain meta if supplied', async () => {
         const meta = {id: 1};
-        let spy = await dispatchAsyncSucceededActionThunk(undefined, (meta, ...rest: any[]) => meta, meta);
+        let spy = await dispatchAsyncSucceededActionThunk(undefined, (meta) => meta, meta);
         let started: Action = spy.args[0][0];
         assert.exists(started.meta);
         assert.strictEqual(started.meta, meta);
-        spy = await dispatchAsyncFailedActionThunk(undefined, (meta, ...rest: any[]) => meta, meta);
+        spy = await dispatchAsyncFailedActionThunk(undefined, (meta) => meta, meta);
         started = spy.args[0][0];
         assert.exists(started.meta);
         assert.strictEqual(started.meta, meta);
@@ -107,11 +107,11 @@ suite('create action thunk fixture', () => {
         const param1 = 1;
         const param2 = 2;
         const param3 = 3;
-        const functionSpy = sinon.spy((p1, p2, p3) => Promise.resolve(true));
+        const functionSpy = sinon.spy(() => Promise.resolve(true));
         const factory = createActionThunk(type, functionSpy, (p1, p2, p3) => ({p1, p2, p3}));
         const thunk = factory(param1, param2, param3);
         const spy = sinon.spy();
-        const aux = await thunk(spy);
+        await thunk(spy);
         const succeeded: Action = <any>flatten(spy.args)[1];
         assert.exists(succeeded.meta);
         assert.deepEqual(succeeded.meta, {p1: param1, p2: param2, p3: param3});
@@ -139,7 +139,7 @@ suite('create action thunk fixture', () => {
         assert.strictEqual(failed.meta.meta2, meta2);
     });
     test('failed action payload should contain error', async () => {
-        const result = new Error('error')
+        const result = new Error('error');
         const meta1 = {id: 1};
         const meta2 = {id: 2};
         const spy = await dispatchAsyncFailedActionThunk(result, (meta1, meta2) => ({meta1, meta2}), meta1, meta2);
@@ -210,11 +210,11 @@ suite('create action thunk fixture', () => {
         const param1 = 1;
         const param2 = 2;
         const param3 = 3;
-        const functionSpy = sinon.spy((p1, p2, p3) => true);
+        const functionSpy = sinon.spy(() => true);
         const factory = createActionThunk(type, functionSpy, (p1, p2, p3) => ({p1, p2, p3}));
         const thunk = factory(param1, param2, param3);
         const spy = sinon.spy();
-        const aux = thunk(spy);
+        thunk(spy);
         const succeeded: Action = <any>flatten(spy.args)[1];
         assert.exists(succeeded.meta);
         assert.deepEqual(succeeded.meta, {p1: param1, p2: param2, p3: param3});
@@ -245,7 +245,7 @@ suite('create action thunk fixture', () => {
     });
 
     test('(Not Promise) failed action payload should contain error', () => {
-        const result = new Error('error')
+        const result = new Error('error');
         const meta1 = {id: 1};
         const meta2 = {id: 2};
         const spy =  dispatchFailedActionThunk(result, (meta1, meta2) => ({meta1, meta2}), meta1, meta2);

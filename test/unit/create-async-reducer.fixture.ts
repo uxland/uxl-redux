@@ -1,8 +1,8 @@
-import {AsyncState} from "../../src/create-async-reducer";
-import lensProp from 'ramda/es/lensProp';
+import {AsyncState} from "../../src";
+import {lensProp} from 'ramda';
 import {assert} from 'chai';
 import createAsyncReducer from '../../src/create-async-reducer';
-import {factory} from "../../src/path-resolver";
+import {factory} from "../../src";
 
 const action = 'TYPE';
 const actionCreator = (base: string) => (action: string) => `${base}_${action}`;

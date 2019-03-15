@@ -1,10 +1,10 @@
-import { dedupingMixin } from "@polymer/polymer/lib/utils/mixin";
 import {Store, Unsubscribe} from "redux";
 import {bind} from "./bind";
 import {unbind} from "./unbind";
 import {Constructor, LitElement} from "lit-element";
 import {MixinFunction} from "@uxland/uxl-utilities/types";
-import {microTask} from "@polymer/polymer/lib/utils/async";
+import {dedupingMixin} from "@uxland/uxl-utilities/deduping-mixin";
+import {microTask} from "@uxland/uxl-utilities/async/micro-task";
 
 export interface ConnectMixin {
     __reduxStoreSubscriptions__: Unsubscribe[];

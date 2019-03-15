@@ -1,17 +1,11 @@
 import {LitElement} from "lit-element";
-import pipe from 'ramda/es/pipe';
-import values from 'ramda/es/values';
-import uniq from 'ramda/es/uniq';
-import map from 'ramda/es/map';
-import propEq from 'ramda/es/propEq';
-import filter from 'ramda/es/filter';
-import equals from 'ramda/es/equals';
-import reject from 'ramda/es/reject';
+import {pipe, values, uniq, map, propEq, filter, equals, reject} from 'ramda';
 import {Store, Unsubscribe} from "redux";
 import {PropertyWatch} from "./connect";
 import {getWatchedProperties} from "./watched-redux-property";
-import {timeOut} from '@polymer/polymer/lib/utils/async.js';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce.js';
+import {Debouncer} from "@uxland/uxl-utilities/async/debounce";
+import {after} from "@uxland/uxl-utilities/async/time-out";
+
 const nop = () =>{};
 
 const mapWatches = (watchesMap: {[key: string]:PropertyWatch}) => values(watchesMap);
@@ -33,7 +27,7 @@ const listen = (element: LitElement, store: Store) => {
     const watches = getStoreWatches(element)(store);
     let debounceJob = null;
     const update = () => pipe(getProperties(store.getState(), element), rejectUnchanged, updateProperties(element), nop)(watches);
-    return  () => Debouncer.debounce(debounceJob, timeOut.after(5), update);
+    return  () => Debouncer.debounce(debounceJob, after(16), update);
 };
 const listener = (element: LitElement) => (store: Store) => store.subscribe(listen(element, store));
 

@@ -1,19 +1,6 @@
 import {Action} from "./create-action";
 import {BasicOptions} from './create-basic-reducer';
-import {Lens} from 'ramda';
-import is from 'ramda/es/is';
-import view from 'ramda/es/view';
-import isNil from 'ramda/es/isNil';
-import set from 'ramda/es/set';
-import lensProp from 'ramda/es/lensProp';
-import propEq from 'ramda/es/propEq';
-import cond from 'ramda/es/cond';
-import Tr from 'ramda/es/T';
-import ifElse from 'ramda/es/ifElse';
-import pipe from 'ramda/es/pipe';
-import equals from 'ramda/es/equals';
-import always from 'ramda/es/always';
-import when from 'ramda/es/when';
+import {Lens, is, view, isNil, set, lensProp, propEq, cond, T as Tr, ifElse, pipe, equals, always, when} from 'ramda';
 import {resolvePath, PathResolver} from "./path-resolver";
 
 export interface Options<T = any> extends BasicOptions<T>{

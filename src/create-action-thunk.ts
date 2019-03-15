@@ -1,8 +1,5 @@
 import {createAction} from "./create-action";
-import is from 'ramda/es/is';
-import ifElse from 'ramda/es/ifElse';
-import always from 'ramda/es/always';
-import drop from 'ramda/es/drop';
+import {drop, ifElse, is, always} from 'ramda';
 
 type MetaCreator = (...args: any) => any;
 const createMeta = (mc: MetaCreator) => (...args: any) => mc(...drop(1, args));
