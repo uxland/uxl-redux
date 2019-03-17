@@ -1,6 +1,7 @@
 import {Action, Store} from "redux";
 import {RESET_STORE_ACTION} from "./resetable-reducer";
-import {tap, pipe} from  'ramda';
+import {pipe, tap} from 'ramda';
+
 const resetAction: Action = {type: RESET_STORE_ACTION};
 const initAction: Action = {type: "@@uxl-redux:init-state:action"};
 const forceReset = (store: Store) => store.dispatch(resetAction);

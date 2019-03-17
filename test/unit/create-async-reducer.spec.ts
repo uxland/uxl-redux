@@ -1,6 +1,5 @@
 import {AsyncState} from "../../src";
 import {lensProp} from 'ramda';
-import {assert} from 'chai';
 import createAsyncReducer from '../../src/create-async-reducer';
 import {factory} from "../../src";
 
@@ -12,65 +11,65 @@ const failedAction = actionCreator(action)('FAILED');
 const succeededAction = actionCreator(action)('SUCCEEDED');
 const invalidatedAction = actionCreator(action)('INVALIDATED');
 
-suite('create async reducer fixture', () => {
-    test('should initialize to default AsyncState', () =>{
+describe('create async reducer fixture', () => {
+    it('should initialize to default AsyncState', () =>{
        const reducer = createAsyncReducer<any>(action);
        const state = reducer(undefined, {type: 'OTHER-TYPE'});
-       assert.deepEqual(state, {
+       expect(state).toEqual({
            didInvalidate: false,
            error: false,
            isFetching: false,
        });
     });
-    test('should initialize state if default value is supplied', () =>{
+    it('should initialize state if default value is supplied', () =>{
         const reducer = createAsyncReducer<number>(action, {defValue: 1});
         const state = reducer(undefined, {type: 'OTHER-TYPE'});
-        assert.deepEqual(state, {didInvalidate: false, state: 1, error: false, isFetching: false});
+        expect(state).toEqual({didInvalidate: false, state: 1, error: false, isFetching: false});
     });
-    test('should return state if action type is different', () =>{
+    it('should return state if action type is different', () =>{
         const reducer = createAsyncReducer<number>(action);
         const state = {isFetching: false, didInvalidate: false, error: false, state: 15};
         const newState = reducer(state, {type: 'OTHER-ACTION', payload: 34});
-        assert.strictEqual(newState, state);
+        expect(newState).toBe(state);
     });
     test('action name is not a valid action', () =>{
         const reducer = createAsyncReducer<number>(action);
         const state = {isFetching: false, didInvalidate: false, error: false, state: 15};
         const newState = reducer(state, {type: action, payload: 34});
-        assert.strictEqual(newState, state);
+        expect(newState).toBe(state);
     });
     test( 'handling action started sets isFetching property to true and resets other properties', () =>{
         const reducer = createAsyncReducer<number>(action);
         const state: AsyncState = {isFetching: false, didInvalidate: true, error: true, errorDescription: 'myError', exceptions: [],state: 34, timestamp: new Date() };
         const newState = reducer(state, {type: startedAction});
-        assert.notStrictEqual(state, newState);
-        assert.deepEqual(newState, {isFetching: true, didInvalidate: false, error: false});
+        expect(state).not.toBe(newState);
+        expect(newState).toEqual({isFetching: true, didInvalidate: false, error: false});
     });
     test('handling action succeeded set state to payload and resets other properties', () =>{
         const reducer = createAsyncReducer<number>(action);
         const state: AsyncState = {isFetching: false, didInvalidate: true, error: true, errorDescription: 'myError', exceptions: [],state: 34, timestamp: new Date() };
         const newState = reducer(state, {type: succeededAction, payload: 55});
-        assert.notStrictEqual(state, newState);
-        assert.deepEqual(newState, {isFetching: false, didInvalidate: false, error: false, state: 55});
+        expect(state).not.toBe(newState);
+        expect(newState).toEqual({isFetching: false, didInvalidate: false, error: false, state: 55});
     });
     test('handling action failed sets error properties', () =>{
         const reducer = createAsyncReducer<number>(action);
         const state: AsyncState = {isFetching: false, didInvalidate: true, error: true, errorDescription: 'myError', exceptions: [],state: 34, timestamp: new Date() };
         let newState = reducer(state, {type: failedAction, payload: {message: 'error message'}});
-        assert.notStrictEqual(state, newState);
+        expect(state).not.toBe(newState);
         const expected = {isFetching: false, didInvalidate: false, error: true, errorDescription: 'error message', exceptions: [{message: 'error message'}]};
-        assert.deepEqual(newState, expected);
+        expect(newState).toEqual(expected);
         newState = reducer(state, {type: failedAction});
-        assert.deepEqual(newState, {isFetching: false, didInvalidate: false, error: true});
+        expect(newState).toEqual({isFetching: false, didInvalidate: false, error: true});
         newState = reducer(state, {type: failedAction, payload: 34});
-        assert.deepEqual(newState, {isFetching: false, didInvalidate: false, error: true, errorDescription: '34', exceptions: [34]});
+        expect(newState).toEqual({isFetching: false, didInvalidate: false, error: true, errorDescription: '34', exceptions: [34]});
     });
     test('handling action ended sets elapsed time', () =>{
         const reducer = createAsyncReducer<number>(action);
         const state: AsyncState = {isFetching: false, didInvalidate: true, error: true, errorDescription: 'myError', exceptions: [],state: 34, timestamp: new Date() };
         let newState = reducer(state, {type: endedAction, payload:65});
-        assert.notStrictEqual(state, newState);
-        assert.deepEqual(newState, {...state, elapsed: 65});
+        expect(state).not.toBe(newState);
+        expect(newState).toEqual({...state, elapsed: 65});
     });
     test('handling action ended should not set elapsed is not supplied', () =>{
         const reducer = createAsyncReducer<number>(action);
@@ -330,7 +329,7 @@ suite('create async reducer fixture path resolver', () => {
    test('succeeded action should use payload accessor if supplied', () =>{
        let reducer = createAsyncReducer(action, {payloadAccessor: a => a.payload.data, pathResolver: dataLensProp});
        let newState = reducer(undefined, {type: succeededAction, payload:{data: 15}});
-       assert.deepEqual(newState, {data:{
+       expect(newState).toEqual({data:{
            isFetching: false,
            didInvalidate: false,
            error: false,
@@ -338,7 +337,7 @@ suite('create async reducer fixture path resolver', () => {
        }});
        reducer = createAsyncReducer(action, {payloadAccessor: a => a.payload.data, pathResolver: metaPathResolver});
        newState = reducer(undefined, {type: succeededAction, payload:{data: 15}, meta: {propertyId: 'data'}});
-       assert.deepEqual(newState, {data:{
+       expect(newState).toEqual({data:{
                isFetching: false,
                didInvalidate: false,
                error: false,

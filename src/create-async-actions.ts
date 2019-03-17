@@ -1,4 +1,4 @@
-export interface AsyncActions{
+export interface AsyncActions {
     started: string;
     failed: string;
     succeeded: string;
@@ -20,3 +20,4 @@ export const createAsyncActions: (actionName: string) => AsyncActions = actionNa
         invalidated: `${actionName}${INVALIDATED_SUFFIX}`
     };
 };
+export default createAsyncActions;

@@ -1,12 +1,13 @@
 import {Action} from "./create-action";
 import {Reducer} from "redux";
 import {Lens, set} from 'ramda';
-import {resolvePath, PathResolver} from "./path-resolver";
+import {PathResolver, resolvePath} from "./path-resolver";
 
 export interface BasicOptions<T = any> {
     defValue?: T;
     path?: Lens | PathResolver;
 }
+
 const setState = (state, action: Action, path: Lens | PathResolver) =>
     path ? set(resolvePath(path, action), action.payload, state) : action.payload;
 

@@ -1,76 +1,77 @@
 import {isFSA} from './flux-standard-action';
-import {createAction} from "../../src/create-action";
-import {assert} from 'chai';
+import {createAction} from "../../src";
 const type = 'TYPE';
-suite('create action fixture', () =>{
+describe('create action fixture', () =>{
    test('returns a valid FSA', () =>{
        const actionCreator = createAction(type, b => b);
        const foobar = { foo: 'bar' };
        const action = actionCreator(foobar);
-       assert.isOk(isFSA(action));
+       expect(isFSA(action)).toBeTruthy();
    });
     test('uses return value as payload', () => {
         const actionCreator = createAction(type, b => b);
         const foobar = { foo: 'bar' };
         const action = actionCreator(foobar);
-        assert.deepEqual(action, {type, payload: foobar});
+        expect(action).toEqual({type, payload: foobar});
     });
     test('throws an error if payloadCreator is not a function, undefined, null', () => {
         const wrongTypePayloadCreators = [1, false, 'string', {}, []];
-        wrongTypePayloadCreators.forEach( x => assert.throws(() => createAction(type, <any>x), Error, 'Expected payloadCreator to be a function, undefined or null'));
+        wrongTypePayloadCreators.forEach(x =>{
+            expect(() => createAction(type, <any>x)).toThrow('Expected payloadCreator to be a function, undefined or null')
+        });
     });
     test('uses identity function if payloadCreator is undefined', () => {
         const actionCreator = createAction(type);
         const foobar = { foo: 'bar' };
         const action = actionCreator(foobar);
-        assert.deepEqual(action,{
+        expect(action).toEqual({
             type,
             payload: foobar
         });
-        assert.isOk(isFSA(action));
+        expect(isFSA(action)).toBeTruthy();
     });
     test('uses identity function if payloadCreator is null', () => {
         const actionCreator = createAction(type, null);
         const foobar = { foo: 'bar' };
         const action = actionCreator(foobar);
-        assert.deepEqual(action, {
+        expect(action).toEqual({
             type,
             payload: foobar
         });
-        assert.isOk(isFSA(action));
+        expect(isFSA(action)).toBeTruthy();
     });
     test('accepts a second parameter for adding meta to object', () => {
         const actionCreator = createAction(type, undefined, ({ cid }) => ({ cid }));
         const foobar = { foo: 'bar', cid: 5};
         const action = actionCreator(foobar, 5);
-        assert.deepEqual(action,{
+        expect(action).toEqual({
             type,
             payload: foobar,
             meta: {
                 cid: 5
             }
         });
-        assert.isOk(isFSA(action));
+        expect(isFSA(action)).toBeTruthy();
     });
     test('sets error to true if payload is an Error object', () => {
         const actionCreator = createAction(type);
         const errObj = new TypeError('this is an error');
 
         const errAction = actionCreator(errObj);
-        assert.deepEqual(errAction, {
+        expect(errAction).toEqual({
             type,
             payload: errObj,
             error: true
         });
-        assert.isOk(isFSA(errAction));
+        expect(isFSA(errAction)).toBeTruthy();
 
         const foobar = { foo: 'bar', cid: 5 };
         const noErrAction = actionCreator(foobar);
-        assert.deepEqual(noErrAction,{
+        expect(noErrAction).toEqual({
             type,
             payload: foobar
         });
-        assert.isOk(isFSA(noErrAction));
+        expect(isFSA(noErrAction)).toBe(true);
     });
 
     test('sets error to true if payload is an Error object and meta is provided', () => {
@@ -78,7 +79,7 @@ suite('create action fixture', () =>{
         const errObj = new TypeError('this is an error');
 
         const errAction = actionCreator(errObj, { foo: 'bar' });
-        assert.deepEqual(errAction, {
+        expect(errAction).toEqual({
             type,
             payload: errObj,
             error: true,
@@ -87,18 +88,18 @@ suite('create action fixture', () =>{
     });
     test('sets payload only when defined', () => {
         const action = createAction(type)();
-        assert.deepEqual(action, {
+        expect(action).toEqual({
             type
         });
 
         const explicitUndefinedAction = createAction(type)(undefined);
-        assert.deepEqual(explicitUndefinedAction, {
+        expect(explicitUndefinedAction).toEqual({
             type
         });
 
         const baz = '1';
         const actionCreator = createAction(type, undefined, () => ({ bar: baz }));
-        assert.deepEqual(actionCreator(),{
+        expect(actionCreator()).toEqual({
             type,
             meta: {
                 bar: '1'
@@ -109,7 +110,7 @@ suite('create action fixture', () =>{
         for (let i = 0; i < validPayload.length; i++) {
             const validValue = validPayload[i];
             const expectPayload = createAction(type)(validValue);
-            assert.deepEqual(expectPayload, {
+            expect(expectPayload).toEqual({
                 type,
                 payload: validValue
             });
@@ -120,7 +121,7 @@ suite('create action fixture', () =>{
         const errObj = new TypeError('this is an error');
 
         const errAction = actionCreator(errObj, { foo: 'bar' });
-        assert.deepEqual(errAction,<any>{
+        expect(errAction).toEqual(<any>{
             type,
             payload: errObj,
             error: true,
@@ -132,7 +133,7 @@ suite('create action fixture', () =>{
         const errObj = new TypeError('this is an error');
         const actionCreator = createAction(type, () => errObj);
         const errAction = actionCreator('invalid arguments');
-        assert.deepEqual(errAction,{
+        expect(errAction).toEqual({
             type,
             payload: errObj,
             error: true
