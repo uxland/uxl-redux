@@ -5,8 +5,6 @@ module.exports = api =>{
         "@babel/preset-typescript"
     ];
     const plugins = [
-       /* "@babel/proposal-class-properties",
-        "@babel/proposal-object-rest-spread"*/
     ];
   return{
       env:{
