@@ -1,5 +1,6 @@
 import {createAction} from "./create-action";
-import {always, drop, ifElse, is} from 'ramda';
+import {always, drop, ifElse} from 'ramda';
+import {isFunction} from "@uxland/uxl-utilities";
 
 type MetaCreator = (...args: any) => any;
 const createMeta = (mc: MetaCreator) => (...args: any) => mc(...drop(1, args));
@@ -9,7 +10,7 @@ const createActionThunk = (type: string, fn: Function, metaCreator?: (...args: a
     const TYPE_FAILED = `${type}_FAILED`;
     const TYPE_ENDED = `${type}_ENDED`;
 
-    const finalMetaCreator: (mc) => MetaCreator = ifElse(is(Function), createMeta, always(undefined));
+    const finalMetaCreator: (mc) => MetaCreator = ifElse(isFunction, createMeta, always(undefined));
     const actionCreators = {
         [TYPE_START]: createAction(TYPE_START, () => undefined, metaCreator),
         [TYPE_SUCCEEDED]: createAction(TYPE_SUCCEEDED, undefined, finalMetaCreator(metaCreator)),
