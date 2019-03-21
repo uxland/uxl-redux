@@ -1,10 +1,16 @@
 node_modules/
 .idea/
+dist/
 dev/
 src/**/*.js
 src/**/*.js.map
 test/**/*.js
 test/**/*.js.map
-mochawesome-report/
 !test/unit/setup.js
 !test/unit/tests.loader.js
+demo/**/*.js
+demo/**/*.js.map
+mochawesome-report/
+.DS_Store
+es/
+lib/

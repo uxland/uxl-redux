@@ -2,12 +2,12 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    "rootDir": "src",
-    "noEmit": true,
+    "rootDir": ".",
     "allowJs": true,
-    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
     "noImplicitAny": false,
     "removeComments": true,
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
@@ -24,9 +24,12 @@
       ]
     }
   },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
   "exclude": [
     "node_modules",
-    "es",
-    "dist"
+    "es"
   ]
 }

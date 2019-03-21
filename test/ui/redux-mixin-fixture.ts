@@ -1,3 +1,4 @@
+/*
 import {connect, watch} from "../../src";
 import {html, LitElement} from "lit-element/lit-element";
 
@@ -144,3 +145,4 @@ suite("redux mixin fixture", () => {
         assert.equal(component.header2.innerText, message2);
     });
 });
+*/
