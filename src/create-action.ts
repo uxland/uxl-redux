@@ -1,6 +1,5 @@
-import {identity, isNil} from 'ramda';
+import {identity, isNil, is} from 'ramda';
 import {Action as ReduxAction} from "redux";
-import {isFunction} from "@uxland/uxl-utilities";
 
 export type ActionFunctionAny<R> = (...args: any[]) => R;
 
@@ -20,8 +19,8 @@ export type PayloadCreator<Payload = any> = (...args: any[]) => Payload;
 
 export const createAction: <Payload = any, Meta = any>(type: string, payloadCreator?: PayloadCreator<Payload>, metaCreator?: (...args: any[]) => Meta) => (...args: any[]) => Action<Payload, Meta> =
     (type, payloadCreator = identity, metaCreator) => {
-        invariant(isFunction(payloadCreator) || isNil(payloadCreator), 'Expected payloadCreator to be a function, undefined or null');
-        const hasMeta = isFunction(metaCreator);
+        invariant(is(Function, payloadCreator) || isNil(payloadCreator), 'Expected payloadCreator to be a function, undefined or null');
+        const hasMeta = is(Function, metaCreator);
 
         const finalPayloadCreator: (...args: any[]) => any = isNil(payloadCreator) || payloadCreator === identity ? identity :
             (head, ...args) => head instanceof Error ? head : payloadCreator(head, ...args);
