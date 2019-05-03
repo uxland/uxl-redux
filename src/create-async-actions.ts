@@ -20,4 +20,3 @@ export const createAsyncActions: (actionName: string) => AsyncActions = actionNa
         invalidated: `${actionName}${INVALIDATED_SUFFIX}`
     };
 };
-export default createAsyncActions;

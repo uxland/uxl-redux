@@ -1,4 +1,4 @@
-import createBasicReducer from "../../src/create-basic-reducer";
+import {createBasicReducer} from "../../src";
 import {lensProp} from 'ramda';
 import {factory} from "../../src";
 const action = 'MY-ACTION';

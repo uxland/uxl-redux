@@ -1,4 +1,4 @@
-import createActionThunk from "../../src/create-action-thunk";
+import {createActionThunk} from "../../src";
 import {Action} from "../../src";
 import {flatten} from "ramda";
 

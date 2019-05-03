@@ -32,4 +32,3 @@ export const isAsyncStateStale = <TIn>(state: AsyncState<TIn>, staleInterval?: D
         [validStaleInfo(staleInterval), () => isBefore(Date.now(), durationAdders[staleInterval.unit](state.timestamp, staleInterval.amount))],
         [T, always(false)]
     ])(state);
-export default isAsyncStateStale;

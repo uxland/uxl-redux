@@ -3,7 +3,7 @@ import {always, drop, ifElse, is} from 'ramda';
 
 type MetaCreator = (...args: any) => any;
 const createMeta = (mc: MetaCreator) => (...args: any) => mc(...drop(1, args));
-const createActionThunk = (type: string, fn: Function, metaCreator?: (...args: any[]) => any) => {
+export const createActionThunk = (type: string, fn: Function, metaCreator?: (...args: any[]) => any) => {
     const TYPE_START = `${type}_STARTED`;
     const TYPE_SUCCEEDED = `${type}_SUCCEEDED`;
     const TYPE_FAILED = `${type}_FAILED`;
@@ -57,4 +57,3 @@ const createActionThunk = (type: string, fn: Function, metaCreator?: (...args: a
 
     return factory;
 };
-export default createActionThunk;

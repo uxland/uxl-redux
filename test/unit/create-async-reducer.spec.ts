@@ -1,6 +1,6 @@
 import {AsyncState} from "../../src";
 import {lensProp} from 'ramda';
-import createAsyncReducer from '../../src/create-async-reducer';
+import {createAsyncReducer} from '../../src';
 import {factory} from "../../src";
 
 const action = 'TYPE';

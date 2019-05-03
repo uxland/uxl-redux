@@ -13,7 +13,7 @@
     "author": "UXLand <dev@uxland.es> (http://www.uxland.es)",
     "main": "lib/index.js",
     "module": "es/index.js",
-    "types": "es/index.d.ts",
+    "types": "lib/index.d.ts",
     "keywords": [
         "polymer",
         "web components"
@@ -32,7 +32,7 @@
         "typescript": "^3.3.3333"
     },
     "dependencies": {
-        "@uxland/uxl-utilities": "^3.3.2",
+        "@uxland/uxl-utilities": "^3.3.3",
         "date-fns": "^2.0.0-alpha.27",
         "lit-element": "^2.0.1",
         "ramda": "^0.26.1",

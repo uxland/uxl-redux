@@ -99,4 +99,3 @@ export const createAsyncReducer = <T>(actionName: string, options: Options<T> = 
         [Tr, () => state]
     ])(action);
 };
-export default createAsyncReducer;
