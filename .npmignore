@@ -11,3 +11,4 @@ tsconfig.build.json
 README-template.md
 polymer.json
 wct.config.json
+coverage
