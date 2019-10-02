@@ -7,4 +7,7 @@ babel.config.js
 jest.config.js
 rollup.config-js
 tsconfig.json
-tsconfig-types.json
+tsconfig.build.json
+README-template.md
+polymer.json
+wct.config.json
