@@ -1,5 +1,5 @@
 import {allPass, always, both, cond, either, equals, isNil, propEq, T} from 'ramda';
-import {addDays, addHours, addMinutes, addSeconds, isBefore, isValid} from "date-fns";
+import {addDays, addHours, addMinutes, addSeconds, isAfter, isValid} from "date-fns";
 import {AsyncState, getDefaultState} from "./create-async-reducer";
 import {isNotNil} from "@uxland/uxl-utilities";
 
@@ -29,6 +29,6 @@ export const isAsyncStateStale = <TIn>(state: AsyncState<TIn>, staleInterval?: D
         [nilOrDefault, always(true)],
         [isFetching, always(false)],
         [invalidatedOrError, always(true)],
-        [validStaleInfo(staleInterval), () => isBefore(Date.now(), durationAdders[staleInterval.unit](state.timestamp, staleInterval.amount))],
+        [validStaleInfo(staleInterval), () => isAfter(Date.now(), durationAdders[staleInterval.unit](state.timestamp, staleInterval.amount))],
         [T, always(false)]
     ])(state);
