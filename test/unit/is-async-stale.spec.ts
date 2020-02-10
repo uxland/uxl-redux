@@ -27,10 +27,10 @@ describe('isAsyncStale-fixture', () => {
     });
     it('should return false if timestamp plus stale interval is before now', () => {
         const timeStamp = subMinutes(new Date(), 10);
-        expect(isAsyncStateStale({isFetching: false, timestamp: timeStamp}, {amount: 9, unit: "minutes"})).toBe(false);
+        expect(isAsyncStateStale({isFetching: false, timestamp: timeStamp}, {amount: 9, unit: "minutes"})).toBe(true);
     });
     it('should return false if timestamp plus stale interval is afte now', () => {
         const timeStamp = subMinutes(new Date(), 10);
-        expect(isAsyncStateStale({isFetching: false, timestamp: timeStamp}, {amount: 11, unit: "minutes"})).toBe(true);
+        expect(isAsyncStateStale({isFetching: false, timestamp: timeStamp}, {amount: 11, unit: "minutes"})).toBe(false);
     });
 });
