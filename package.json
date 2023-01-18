@@ -34,7 +34,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "@uxland/uxl-utilities": "^4.0.0",
+    "@uxland/uxl-utilities": "^4.0.1",
     "date-fns": "^2.0.0-alpha.27",
     "ramda": "^0.27.0",
     "reduce-reducers": "^0.3.0",
